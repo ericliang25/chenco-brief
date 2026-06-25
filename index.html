@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Chenco Daily Brief",
+  "schemaVersion": 1,
+  "description": "Chenco Daily Brief — persistent station updated each morning. Rates, markets, interactive task lists, editable items, sync-to-Claude, collapsible Macro/CRE/Webinars.",
+  "mcpTools": [
+    "mcp__workspace__bash"
+  ],
+  "mcpServerNames": [
+    "workspace"
+  ]
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenco Daily Brief</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a1a; font-size: 13px; line-height: 1.5; }
+
+/* HEADER */
+.header {
+  background: #0f172a; color: #fff;
+  padding: 0 20px; height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; white-space: nowrap; overflow: hidden;
+}
+.header-left { display: flex; align-items: baseline; gap: 10px; min-width: 0; flex-shrink: 1; overflow: hidden; }
+.header-title { font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.header-date { font-size: 11px; color: #64748b; flex-shrink: 0; }
+.sync-btn {
+  flex-shrink: 0;
+  background: none; color: #64748b;
+  border: 1px solid #334155;
+  padding: 3px 9px; border-radius: 4px;
+  font-size: 10.5px; font-weight: 500; cursor: pointer;
+  white-space: nowrap; letter-spacing: 0.2px;
+}
+.sync-btn:hover { border-color: #475569; color: #94a3b8; background: #1e293b; }
+.sync-btn:active { transform: scale(0.97); }
+
+/* RATES + MARKETS BARS */
+.data-bar {
+  background: #1e293b; padding: 0 20px; height: 36px;
+  display: flex; align-items: center; gap: 0;
+  border-bottom: 1px solid #0f172a; overflow-x: auto;
+}
+.data-bar::-webkit-scrollbar { display: none; }
+.m { display: flex; align-items: center; gap: 6px; padding: 0 14px; border-right: 1px solid #334155; height: 100%; white-space: nowrap; }
+.m:first-child { padding-left: 0; }
+.m:last-child { border-right: none; }
+.ml { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
+.mv { font-size: 11px; font-weight: 700; color: #f1f5f9; }
+.md { font-size: 11px; font-weight: 500; }
+.up { color: #f87171; }
+.dn { color: #4ade80; }
+.fl { color: #94a3b8; }
+.bar2 { background: #172032; }
+.as-of { font-size: 10px; color: #475569; padding-left: 14px; white-space: nowrap; }
+
+/* MAIN */
+.main { max-width: 1140px; margin: 0 auto; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 720px) { .main { grid-template-columns: 1fr; } }
+.full { grid-column: 1 / -1; }
+
+/* CARD */
+.card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; }
+.card-head { padding: 9px 14px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.card-title { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #475569; flex: 1; }
+.card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.ghost-btn { font-size: 10px; color: #94a3b8; background: none; border: 1px solid #e2e8f0; cursor: pointer; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.ghost-btn:hover { background: #f8fafc; color: #475569; }
+
+/* TASK */
+.task-list { padding: 2px 0; }
+.task-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 14px; border-bottom: 1px solid #f1f5f9; }
+.task-item:last-child { border-bottom: none; }
+.task-item:hover .edit-btn { opacity: 1; }
+.task-cb { width: 16px; height: 16px; border: 1.5px solid #cbd5e1; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; margin-top: 2px; }
+.task-cb:hover { border-color: #3b82f6; }
+.task-item.done .task-cb { background: #10b981; border-color: #10b981; }
+.task-item.done .task-cb::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; }
+.task-body { flex: 1; min-width: 0; }
+.task-title { font-weight: 600; font-size: 12px; color: #0f172a; }
+.task-item.done .task-title { text-decoration: line-through; color: #94a3b8; }
+.task-item.done .task-note { color: #c4c4c4; }
+.task-note { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+/* TAGS */
+.tag { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-right: 3px; text-transform: uppercase; }
+.tu { background: #fef2f2; color: #dc2626; }
+.tp { background: #fffbeb; color: #b45309; }
+.ti { background: #eff6ff; color: #3b82f6; }
+.ts { background: #faf5ff; color: #7c3aed; }
+
+/* PRIORITY BADGES */
+.pb { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-right: 3px; }
+.pb1 { background: #fef2f2; color: #dc2626; }
+.pb3 { background: #f1f5f9; color: #94a3b8; }
+
+.edit-btn { opacity: 0; font-size: 10px; color: #94a3b8; background: none; border: none; cursor: pointer; padding: 2px 5px; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+.edit-btn:hover { background: #f1f5f9; color: #475569; }
+.src-link { font-size: 10px; color: #3b82f6; text-decoration: none; padding: 2px 5px; border-radius: 3px; flex-shrink: 0; margin-top: 1px; opacity: 0; }
+.src-link:hover { background: #eff6ff; }
+.task-item:hover .src-link { opacity: 1; }
+
+/* VIEW MORE */
+.view-more { padding: 6px 14px; }
+.view-more-btn { font-size: 11px; color: #3b82f6; background: none; border: none; cursor: pointer; padding: 0; }
+.view-more-btn:hover { text-decoration: underline; }
+
+/* COLLAPSIBLE NOTES */
+.note-wrap { }
+.note-clamp { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.note-more { display: none; font-size: 10px; color: #94a3b8; cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; }
+.note-more:hover { color: #64748b; }
+.note-less { font-size: 10px; color: #94a3b8; cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; }
+.note-less:hover { color: #64748b; }
+
+/* EDIT FORM */
+.edit-form { display: none; flex-direction: column; gap: 5px; padding: 8px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+.edit-form.active { display: flex; }
+.ei { font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 5px 8px; font-family: inherit; resize: vertical; width: 100%; }
+.ei:focus { outline: none; border-color: #3b82f6; }
+.ei-select { font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; font-family: inherit; background: #fff; width: 100%; }
+.ei-select:focus { outline: none; border-color: #3b82f6; }
+.btn-row { display: flex; gap: 6px; justify-content: flex-end; }
+.btn-save { font-size: 11px; background: #3b82f6; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+.btn-del { font-size: 11px; background: none; color: #ef4444; border: 1px solid #fecaca; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+.btn-cancel { font-size: 11px; background: none; color: #64748b; border: 1px solid #e2e8f0; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+
+/* ADD TASK */
+.add-row { padding: 7px 14px; border-top: 1px solid #f1f5f9; }
+.add-btn { font-size: 11px; color: #3b82f6; background: none; border: none; cursor: pointer; }
+.add-btn:hover { color: #2563eb; }
+.add-form { display: none; flex-direction: column; gap: 5px; margin-top: 6px; }
+.add-form.active { display: flex; }
+
+/* SECTION */
+.section { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; }
+.sec-head { padding: 9px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+.sec-head:hover { background: #f8fafc; }
+.sec-title { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #475569; }
+.sec-arrow { font-size: 10px; color: #94a3b8; transition: transform 0.2s; }
+.section.open .sec-arrow { transform: rotate(180deg); }
+.sec-body { display: none; padding: 12px 14px; border-top: 1px solid #e2e8f0; }
+.section.open .sec-body { display: block; }
+.sub { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin: 10px 0 5px; }
+.sub:first-child { margin-top: 0; }
+.bul { padding: 3px 0 3px 12px; font-size: 12px; color: #374151; position: relative; }
+.bul::before { content: '–'; color: #d1d5db; position: absolute; left: 0; top: 4px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 20px; right: 20px; background: #0f172a; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 12px; max-width: 340px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: none; z-index: 100; }
+.toast.show { display: block; animation: fi 0.2s ease; }
+@keyframes fi { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+.footer { text-align: center; padding: 10px 20px 18px; font-size: 10px; color: #94a3b8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="header-title">Chenco Daily Brief</span>
+    <span class="header-date">Thursday, June 25, 2026</span>
+  </div>
+  <div style="display:flex;gap:5px;flex-shrink:0;">
+    <button class="sync-btn" onclick="syncToChat()" title="Mark done items in TASKS.md, record new tasks, and save HTML to OneDrive">Sync</button>
+    <button class="sync-btn" onclick="runBrief()" title="Check email &amp; Teams for new action items">↺ Refresh</button>
+  </div>
+</div>
+
+<!-- RATES -->
+<div class="data-bar">
+  <div class="m"><span class="ml">10Y UST</span><span class="mv">4.41%</span><span class="md dn">▼ 8bps</span></div>
+  <div class="m"><span class="ml">SOFR</span><span class="mv">3.63%</span><span class="md fl">flat</span></div>
+  <div class="m"><span class="ml">Fed Funds</span><span class="mv">3.50–3.75%</span><span class="md fl">held</span></div>
+  <div class="m"><span class="ml">10Y–2Y</span><span class="mv">+27bps</span><span class="md fl">flat</span></div>
+</div>
+
+<!-- MARKETS -->
+<div class="data-bar bar2">
+  <div class="m"><span class="ml">S&amp;P 500</span><span class="mv">7,358.22</span><span class="md up">▼ 0.10%</span></div>
+  <div class="m"><span class="ml">NAREIT</span><span class="mv">856.68</span><span class="md up">▼ 0.10%</span></div>
+  <div class="m"><span class="ml">Dow</span><span class="mv">—</span><span class="md fl">n/a</span></div>
+  <div class="m"><span class="ml">VNQ</span><span class="mv">—</span><span class="md fl">n/a</span></div>
+  <div class="m"><span class="ml">DXY</span><span class="mv">—</span><span class="md fl">n/a</span></div>
+  <div class="m"><span class="ml">Brent</span><span class="mv">—</span><span class="md fl">n/a</span></div>
+  <span class="as-of">as of Jun 24 close &nbsp;<a href="https://finance.yahoo.com/markets/" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px;">↗ live</a></span>
+</div>
+
+<div class="main">
+
+  <!-- TODAY -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">Today's Action Items</span>
+      <div class="card-actions">
+        <button class="ghost-btn" onclick="sortByPriority('today')" title="Sort by priority">↑ Priority</button>
+        <button class="ghost-btn" onclick="uncheckAll('today')">Uncheck All</button>
+      </div>
+    </div>
+    <div class="task-list" id="today-list"></div>
+    <div class="add-row">
+      <button class="add-btn" onclick="showAdd('today')">＋ Add item</button>
+      <div class="add-form" id="today-add">
+        <input class="ei" id="today-add-t" placeholder="Title…" />
+        <textarea class="ei" id="today-add-n" rows="2" placeholder="Notes (optional)…"></textarea>
+        <select class="ei-select" id="today-add-p">
+          <option value="1">P1 — Urgent</option>
+          <option value="2" selected>P2 — Normal</option>
+          <option value="3">P3 — Low</option>
+        </select>
+        <div class="btn-row">
+          <button class="btn-cancel" onclick="hideAdd('today')">Cancel</button>
+          <button class="btn-save" onclick="addTask('today')">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONGOING -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">Ongoing Tasks</span>
+      <div class="card-actions">
+        <button class="ghost-btn" onclick="sortByPriority('ongoing')" title="Sort by priority">↑ Priority</button>
+        <button class="ghost-btn" onclick="uncheckAll('ongoing')">Uncheck All</button>
+      </div>
+    </div>
+    <div class="task-list" id="ongoing-list"></div>
+    <div class="add-row">
+      <button class="add-btn" onclick="showAdd('ongoing')">＋ Add item</button>
+      <div class="add-form" id="ongoing-add">
+        <input class="ei" id="ongoing-add-t" placeholder="Title…" />
+        <textarea class="ei" id="ongoing-add-n" rows="2" placeholder="Notes (optional)…"></textarea>
+        <select class="ei-select" id="ongoing-add-p">
+          <option value="1">P1 — Urgent</option>
+          <option value="2" selected>P2 — Normal</option>
+          <option value="3">P3 — Low</option>
+        </select>
+        <div class="btn-row">
+          <button class="btn-cancel" onclick="hideAdd('ongoing')">Cancel</button>
+          <button class="btn-save" onclick="addTask('ongoing')">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MACRO -->
+  <div class="section full open" id="macro-sec">
+    <div class="sec-head" onclick="tog('macro-sec')"><span class="sec-title">Macro</span><span class="sec-arrow">▲</span></div>
+    <div class="sec-body">
+      <div class="bul"><strong>Rates</strong> — 10Y: 4.51% (prev 4.46%) | SOFR: 3.62% (prev 3.61%) | Fed Funds: 3.50–3.75% (held)</div>
+      <div class="bul"><strong>K-Shaped Economy</strong> — MetLife says the growing divide between high-income and budget-conscious consumers is reshaping CRE investment decisions. Strongest opportunities tied to specific demographic segments — senior housing, luxury lodging, net lease retail — not broad property bets. (CRE Daily, 6/24)</div>
+      <div class="bul"><strong>Less Fed Guidance</strong> — Experts warn reduced Fed policy transparency could increase rate uncertainty and widen capital markets volatility. (GlobeSt, 6/24)</div>
+      <div class="bul"><strong>Tax-Exempt Bonds Back</strong> — Rising rates amplifying value of tax-exempt bond executions for affordable housing sponsors. Capital stack creativity increasingly the difference between deals that pencil and ones that don’t. (GlobeSt, 6/24)</div>
+      <div class="bul"><strong>AI Reshapes Valuation</strong> — PwC says CRE investors are shifting from building-only focus to evaluating operating platforms and efficiencies behind assets. (GlobeSt, 6/24)</div>
+    </div>
+  </div>
+
+  <!-- CRE -->
+  <div class="section full open" id="cre-sec">
+    <div class="sec-head" onclick="tog(‘cre-sec’)"><span class="sec-title">CRE</span><span class="sec-arrow">▲</span></div>
+    <div class="sec-body">
+      <div class="sub">Multifamily</div>
+      <div class="bul"><strong>Rent Control Setback</strong> — Massachusetts high court kills statewide ballot measure; debate shifts to local supply-side reforms. Short-term positive for multifamily owners. (CRE Daily, 6/25)</div>
+      <div class="bul"><strong>Oregon Portfolio Refi</strong> — Multifamily portfolio in affordable Oregon market secures $128M refi across four properties. (GlobeSt, 6/24–25)</div>
+      <div class="bul"><strong>SFR Rents Rising</strong> — New report shows positive rent growth across all 50 largest U.S. metros; REIT acquisitions and capital markets activity recovering. (GlobeSt, 6/25)</div>
+
+      <div class="sub">Industrial</div>
+      <div class="bul"><strong>Self-Storage Tops but Slips</strong> — Occupancy has fallen below pre-pandemic levels from oversupply, yet sector still outperforms other CRE types on returns per DXD Capital. (GlobeSt, 6/25)</div>
+
+      <div class="sub">Office</div>
+      <div class="bul"><strong>Atlanta Class A Pipeline</strong> — PE investors chasing limited Class A supply in Atlanta; new construction wave and programmatic JVs expected. (GlobeSt, 6/25)</div>
+      <div class="bul"><strong>Morgan Stanley Location Debate</strong> — Weighing Dallas vs. Atlanta suburb for new office hub; reflects intensifying city competition for financial sector jobs. (GlobeSt, 6/25)</div>
+
+      <div class="sub">Other</div>
+      <div class="bul"><strong>Retail Traffic Selective</strong> — Consumers favoring entertainment, discount, and department stores while cutting restaurants and grocery. (GlobeSt, 6/25)</div>
+      <div class="bul"><strong>AI Market Expansion</strong> — Boulder, Durham, Dallas emerging as alternatives to traditional AI capitals via data centers, research universities, and STEM talent. (GlobeSt, 6/25)</div>
+    </div>
+  </div>
+
+  <!-- WEBINARS -->
+  <div class="section full" id="web-sec">
+    <div class="sec-head" onclick="tog(‘web-sec’)"><span class="sec-title">Webinars</span><span class="sec-arrow">▼</span></div>
+    <div class="sec-body">
+      <div class="bul">None new. GlobeSt Women of Influence — July 13–14, Denver. Registration open.</div>
+    </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Sources: CRE Daily (6/25) · GlobeSt (6/25) · sofrrate.com (Jun 24 data) · Outlook Inbox · Microsoft Teams (6/24–6/25)</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const MAX_VISIBLE = 6;
+const expandState = {};
+const noteExpanded = {};
+let dirty = false;
+
+window.addEventListener('beforeunload', e => {
+  if(dirty){ e.preventDefault(); e.returnValue = ''; }
+});
+
+const data = {"today": [{"tag": "tp", "tl": "Respond", "title": "Teams: Andrew Chen — Deal Comparison Question", "note": "Andrew asked Eric directly: which deal is better — Cahuenga Recap, Jasmine, or Domain/Castlewood? Needs a response. (6/25)", "done": false, "link": ""}, {"tag": "tu", "tl": "Urgent", "title": "4130 Cahuenga | Recapitalization Investment — Review", "note": "Justin Hsu forwarded to Eric and team (unread, has attachments). Review and respond. (6/25)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVQCfgoAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Decision", "title": "Han Man-hsin — CPAM SharePoint Access Request", "note": "manhsinh requesting access to CPAM resource on CRRM SharePoint. Two requests received 6/25 morning. Accept or decline.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVQCfghAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "CTI Q&A — Review Jack Lin Response Sent to CTI", "note": "Jack proposed quarterly video Q&A channel for PRP17 investors (H2 2026). Eric on thread. Review and confirm alignment before any follow-up. (6/25)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVQCfgeAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "Master & Investor Q&A — Updated Drafts from Justin", "note": "Justin sent revised Master and Investor Q&A with change log. Non-nominal changes made; review and confirm. (6/24)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KYAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "ti", "tl": "Admin", "title": "Intern Market Research Presentation — July 10 (July 9, 7:30 PM PDT)", "note": "Mandy Han: July 10 at 10:30 AM Taipei / July 9 at 7:30 PM PDT. Big conference room. (6/25)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVQCfgiAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "ti", "tl": "Info", "title": "Van Allen Capital Call 1 — Wires Confirmed by Harbor", "note": "Robert Meyer (Harbor) confirmed receipt of both PRP and Bascom wires 6/25. Verify fund records updated.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVQCfgmAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}], "ongoing": [{"tag": "tu", "tl": "Urgent", "title": "Bascom Acquisition — Decision ASAP (Domain 3201 + Castlewood Park)", "note": "Justin FWD. Crossed deal — two existing Bascom deals must be sold. Xinchen not long-term LP. Justin: let me know ASAP. (6/24)", "done": true, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KXAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tu", "tl": "Urgent", "title": "Sunset Corporate Center — Review Revised Board Resolutions (CIIC + PRP II)", "note": "Andrew revised and reattached Resolutions for EWB refi. Review and comment. Also pinged via Teams. (6/24)", "done": true}, {"tag": "tu", "tl": "Urgent", "title": "Teams: AUM Deals + IRR — OVERDUE (was due 6/24 EOD)", "note": "Justin asked which AUM deals need review and help finalizing IRR calculations. Due Derek 6/24 EOD — now overdue. (6/23)", "done": false}, {"tag": "tp", "tl": "Respond", "title": "Roosevelt Road Assemblage — Funding Policy Decision", "note": "Renee fwd: excess funding from Ian/Meridian should return to CRRM/PRPs, not reallocated internally. Justin to advise; Eric looped in. (6/24)", "done": false}, {"tag": "tp", "tl": "Respond", "title": "FW: ACII — Review from Justin Hsu", "note": "Justin forwarded with attachment (6/24 ~4:42pm PT). Review and respond if needed.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KTAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "FW: America Center Investments — Review from Justin Hsu", "note": "Justin forwarded with attachment (6/24 ~4:42pm PT). Review and respond.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KSAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "Northridge — Review from Justin Hsu", "note": "Justin sent directly to Eric + Nathan with attachment (6/24 ~11am PT). Review and respond.", "done": false}, {"tag": "tp", "tl": "Decision", "title": "July Travel Schedule — Advise Nathan", "note": "Nathan asking for July schedule. Reply when ready. (6/24)", "done": true}, {"tag": "tp", "tl": "Respond", "title": "Teams: Possible Notarization — Andrew Chen / Castlewood Escrow", "note": "Andrew waiting on EWB + escrow to confirm Resolution language. Closing doc may need Justin signature + notarization. (6/23)", "done": false}, {"tag": "tp", "tl": "Admin", "title": "SW Marina Park GP — 06/24 Distribution: Log in Fund Records", "note": "SteelWave: $59,550 from LPF Marina Park (Jan-Jun 2026). Track in AUM/fund records.", "done": false}, {"tag": "tp", "tl": "Admin", "title": "Pasadena Towers — Distribution 3: Verify Fund Records", "note": "Harbor processed; Bascom confirming $2,958.78. Verify Chenco share logged. (6/23)", "done": false}, {"tag": "tp", "tl": "Respond", "title": "FW: Talus Final Distribution — Review", "note": "Andrew Chen fwd from Brenda Zalke (IHP) re: final distribution. Pacific Life on thread. Has attachment. (6/23)", "done": false}, {"tag": "tp", "tl": "Admin", "title": "Bascom Funding Request — Week of 6/22/26", "note": "$1,186,400 needed over next 2 weeks. C. Liu (Bascom) to Derek and team. (6/23)", "done": false}, {"tag": "tp", "tl": "Admin", "title": "1640 Sepulveda — May 2026 Financials", "note": "Tiarna sent May 2026 PDF report (6/19). Review and file.", "done": false}, {"tag": "ti", "tl": "Admin", "title": "Van Allen Financial Report — Review & File", "note": "Monthly report from Tiarna. Steven (FF Capital) requested April financials 6/18.", "done": false}, {"tag": "ti", "tl": "Admin", "title": "Green Street Reports (Apr/May 2026) — Review in SharePoint", "note": "Nathan uploaded Sector Updates, Sector Insights, CPPI. (6/17)", "done": false}, {"tag": "ti", "tl": "Teams", "title": "Teams: Confirm PPM Wording", "note": "Justin asked if Claude-drafted Interim Financing section works; Derek/Fernando prefer v2. Eric go-ahead needed. (6/17)", "done": false}, {"tag": "ti", "tl": "Info", "title": "FW: ECI Strategic Market Update — Review", "note": "Justin forwarded ECI update. Review when time permits. (6/23)", "done": false}, {"tag": "tp", "tl": "Pending", "title": "CHC/CRRM Structure Adjustment to AMCs", "note": "Structure adjustment pending.", "done": false}, {"tag": "tp", "tl": "Pending", "title": "W-8BEN Renewal", "note": "Send renewal forms to all investors.", "done": false}, {"tag": "tp", "tl": "Pending", "title": "CITIC Trust Monthly Video Calls", "note": "Confirm calendar — CITIC accepted monthly video arrangement (6/10).", "done": false}, {"tag": "ti", "tl": "Manual", "title": "AUM Merge", "note": "Super long term goal.", "done": false}, {"tag": "ti", "tl": "Manual", "title": "ALO2 Shell PPM", "note": "", "done": false}, {"tag": "ti", "tl": "Manual", "title": "Companies Note", "note": "Need more clarification from FB email.", "done": false}]};
+
+function h(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function ha(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+function prioBadge(p) {
+  if (p === 1) return '<span class="pb pb1">P1</span>';
+  if (p === 3) return '<span class="pb pb3">P3</span>';
+  return '';
+}
+
+function renderNote(note, id, title) {
+  if(!note) return '';
+  const key = id+'::'+title;
+  const expanded = !!noteExpanded[key];
+  const sid = ha(id), stl = ha(title);
+  if(expanded) {
+    return `<div class="note-wrap">
+      <div class="task-note">${h(note)}</div>
+      <button class="note-less" data-nid="${sid}" data-ntl="${stl}" onclick="toggleNote(this)">less ▲</button>
+    </div>`;
+  }
+  return `<div class="note-wrap">
+    <div class="task-note note-clamp">${h(note)}</div>
+    <button class="note-more" data-nid="${sid}" data-ntl="${stl}" onclick="toggleNote(this)">… more</button>
+  </div>`;
+}
+function toggleNote(el){ const k=el.dataset.nid+'::'+el.dataset.ntl; noteExpanded[k]=!noteExpanded[k]; render(el.dataset.nid); }
+
+function render(id) {
+  // Auto-sort: P1 first within undone, done items sink to bottom
+  data[id].sort((a,b) => {
+    if(a.done !== b.done) return a.done ? 1 : -1;
+    return (a.prio||2) - (b.prio||2);
+  });
+  const list = document.getElementById(id+'-list');
+  list.innerHTML = '';
+  const items = data[id];
+  const total = items.length;
+  const showAll = !!expandState[id];
+  const visible = showAll ? items : items.slice(0, MAX_VISIBLE);
+
+  visible.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'task-item'+(item.done?' done':'');
+    row.innerHTML = `
+      <div class="task-cb" onclick="toggleDone('${id}',${i})"></div>
+      <div class="task-body">
+        <div class="task-title">${prioBadge(item.prio||2)}<span class="tag ${item.tag}">${h(item.tl)}</span>${h(item.title)}</div>
+        ${renderNote(item.note, id, item.title)}
+      </div>
+      ${item.link ? `<a href="${ha(item.link)}" target="_blank" class="src-link" title="Open source">↗</a>` : ''}
+      <button class="edit-btn" onclick="openEdit('${id}',${i})">✎</button>`;
+    list.appendChild(row);
+
+    const form = document.createElement('div');
+    form.className = 'edit-form';
+    form.id = `ef-${id}-${i}`;
+    form.innerHTML = `
+      <input class="ei" id="et-${id}-${i}" value="${ha(item.title)}" placeholder="Title"/>
+      <textarea class="ei" id="en-${id}-${i}" rows="2">${h(item.note||'')}</textarea>
+      <select class="ei-select" id="ep-${id}-${i}">
+        <option value="1" ${(item.prio||2)===1?'selected':''}>P1 — Urgent</option>
+        <option value="2" ${(item.prio||2)===2?'selected':''}>P2 — Normal</option>
+        <option value="3" ${(item.prio||2)===3?'selected':''}>P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('${id}',${i})">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('${id}',${i})">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('${id}',${i})">Save</button>
+      </div>`;
+    list.appendChild(form);
+  });
+
+  if (total > MAX_VISIBLE) {
+    const hidden = total - MAX_VISIBLE;
+    const vm = document.createElement('div');
+    vm.className = 'view-more';
+    vm.innerHTML = showAll
+      ? `<button class="view-more-btn" onclick="toggleExpand('${id}')">Show less ▲</button>`
+      : `<button class="view-more-btn" onclick="toggleExpand('${id}')">Show ${hidden} more ▼</button>`;
+    list.appendChild(vm);
+  }
+
+  // Show "… more" only when note actually overflows one line
+  requestAnimationFrame(() => {
+    list.querySelectorAll('.note-clamp').forEach(el => {
+      if(el.scrollHeight > el.offsetHeight + 2) {
+        const btn = el.nextElementSibling;
+        if(btn?.classList.contains('note-more')) btn.style.display = 'block';
+      }
+    });
+  });
+}
+
+function toggleExpand(id) { expandState[id] = !expandState[id]; render(id); }
+function toggleDone(id,i){ data[id][i].done=!data[id][i].done; dirty=true; render(id); }
+function uncheckAll(id){ data[id].forEach(t=>t.done=false); dirty=true; render(id); }
+function sortByPriority(id){ render(id); showToast('Sorted by priority.'); }
+function openEdit(id,i){ document.querySelectorAll('.edit-form.active').forEach(f=>f.classList.remove('active')); document.getElementById(`ef-${id}-${i}`).classList.add('active'); }
+function closeEdit(id,i){ document.getElementById(`ef-${id}-${i}`).classList.remove('active'); }
+function saveEdit(id,i){
+  data[id][i].title = document.getElementById(`et-${id}-${i}`).value.trim() || data[id][i].title;
+  data[id][i].note  = document.getElementById(`en-${id}-${i}`).value.trim();
+  data[id][i].prio  = parseInt(document.getElementById(`ep-${id}-${i}`).value);
+  dirty=true; render(id);
+}
+function delTask(id,i){ data[id].splice(i,1); dirty=true; render(id); }
+
+function showAdd(id){ document.getElementById(id+'-add').classList.add('active'); document.getElementById(id+'-add-t').focus(); }
+function hideAdd(id){ document.getElementById(id+'-add').classList.remove('active'); document.getElementById(id+'-add-t').value=''; document.getElementById(id+'-add-n').value=''; document.getElementById(id+'-add-p').value='2'; }
+function addTask(id){
+  const t = document.getElementById(id+'-add-t').value.trim();
+  if(!t) return;
+  data[id].unshift({tag:'ti',tl:'Manual',title:t,note:document.getElementById(id+'-add-n').value.trim(),done:false,prio:parseInt(document.getElementById(id+'-add-p').value),isNew:true});
+  dirty=true; hideAdd(id); render(id);
+}
+
+function tog(id){ document.getElementById(id).classList.toggle('open'); }
+
+// ── Save HTML to OneDrive via bash (best-effort, silent on failure) ───────────
+async function saveHTMLFile() {
+  if(!window.cowork?.callMcpTool) return false;
+  try {
+    const r0 = await window.cowork.callMcpTool('mcp__workspace__bash', {command:
+      `python3 -c "import os; sl=os.listdir('/sessions'); m=next(('/sessions/'+s+'/mnt/Claude' for s in sl if os.path.exists('/sessions/'+s+'/mnt/Claude')),None); print(m or '')"`
+    });
+    const mount = (r0.content?.[0]?.text || '').trim();
+    if(!mount || mount.length < 5 || mount.includes('failed')) return false;
+    const htmlPath = mount + '/Claude OS/Chenco/daily-brief.html';
+    const dataB64 = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const pyLines = [
+      'import base64,re,sys',
+      'dj=base64.b64decode(sys.argv[1]).decode("utf-8")',
+      'p=sys.argv[2]',
+      'html=open(p,encoding="utf-8").read()',
+      'nh=re.sub(r"const data = \\{[\\s\\S]*?\\};","const data = "+dj+";",html,count=1)',
+      'open(p,"w",encoding="utf-8").write(nh)',
+      'print("ok")'
+    ];
+    const pyB64 = btoa(pyLines.join('\n'));
+    const r = await window.cowork.callMcpTool('mcp__workspace__bash', {command:
+      `echo "${pyB64}" | base64 -d > /tmp/sbf.py && python3 /tmp/sbf.py "${dataB64}" "${htmlPath}"`
+    });
+    return (r.content?.[0]?.text || '').trim().endsWith('ok');
+  } catch(e) { return false; }
+}
+
+// ── Sync: Path 1 bash → Path 2 sendPrompt → Path 3 copy message ──────────────
+async function syncToChat(){
+  const done=[...data.today,...data.ongoing].filter(t=>t.done).map(t=>t.title);
+  const newItems=[...data.today,...data.ongoing].filter(t=>t.isNew&&!t.done);
+  if(!done.length && !newItems.length){ showToast('Nothing to sync.'); return; }
+
+  // Path 1: sendPrompt — primary path, always use when available
+  if(typeof sendPrompt === 'function'){
+    let msg = 'Please sync my brief.';
+    if(done.length) msg += '\n\nCompleted:\n' + done.map(t=>'- '+t).join('\n');
+    if(newItems.length) msg += '\n\nNew tasks:\n' + newItems.map(t=>'- '+t.title+(t.note?' — '+t.note:'')).join('\n');
+    data.today=data.today.filter(t=>!t.done).map(t=>({...t,isNew:false}));
+    data.ongoing=data.ongoing.filter(t=>!t.done).map(t=>({...t,isNew:false}));
+    dirty=false; render('today'); render('ongoing');
+    sendPrompt(msg);
+    showToast('✓ Sent to Claude');
+    return;
+  }
+
+  // Path 2: direct write to TASKS.md via bash (no sendPrompt available)
+  if(window.cowork?.callMcpTool){
+    showToast('⏳ Saving…');
+    const ok = await trySyncViaBash(done, newItems);
+    if(ok) return;
+  }
+
+  // Path 3: copy-to-clipboard fallback
+  let copyMsg = 'Please sync my brief:';
+  if(done.length) copyMsg += '\n\nCompleted:\n' + done.map(t=>'- '+t).join('\n');
+  if(newItems.length) copyMsg += '\n\nNew tasks:\n' + newItems.map(t=>'- '+t.title+(t.note?' — '+t.note:'')).join('\n');
+  showCopy(copyMsg);
+}
+
+async function trySyncViaBash(done, newItems){
+  try{
+    const r1=await window.cowork.callMcpTool('mcp__workspace__bash',{command:
+      `python3 -c "import os,json; sl=os.listdir('/sessions'); m=next(('/sessions/'+s+'/mnt/Claude' for s in sl if os.path.exists('/sessions/'+s+'/mnt/Claude')),None); t=open(m+'/Claude OS/TASKS.md').read() if m else ''; print(json.dumps({'m':m or '','t':t}))"`
+    });
+    const txt=(r1.content?.[0]?.text||'').trim();
+    const jm=txt.match(/\{[\s\S]*\}/);
+    if(!jm) return false;
+    let {m:mount,t:tasks}=JSON.parse(jm[0]);
+    if(!mount) return false;
+
+    const today=new Date().toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'});
+    done.forEach(title=>{
+      const esc=title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      tasks=tasks.replace(new RegExp('^- \\[[ ]\\] \\*\\*'+esc+'\\*\\*.*\\n?','im'),'');
+    });
+    if(done.length) tasks=tasks.replace(/^(## Done)$/m,'$1\n'+done.map(t=>`- [x] **${t}** — Completed ${today}`).join('\n'));
+    if(newItems.length) tasks=tasks.replace(/^(## To Do)$/m,'$1\n'+newItems.map(t=>`- [ ] **${t.title}**${t.note?' — '+t.note:''}`).join('\n'));
+
+    const b64=btoa(unescape(encodeURIComponent(tasks)));
+    const r2=await window.cowork.callMcpTool('mcp__workspace__bash',{command:
+      `python3 -c "import base64; open('${mount}/Claude OS/TASKS.md','w').write(base64.b64decode('${b64}').decode('utf-8'))" && echo ok`
+    });
+    if(!(r2.content?.[0]?.text||'').includes('ok')) return false;
+
+    data.today=data.today.filter(t=>!t.done).map(t=>({...t,isNew:false}));
+    data.ongoing=data.ongoing.filter(t=>!t.done).map(t=>({...t,isNew:false}));
+    dirty=false; render('today'); render('ongoing');
+    saveHTMLFile(); // best-effort
+    showToast('✓ TASKS.md saved!');
+    return true;
+  }catch(e){ return false; }
+}
+
+function showCopy(msg){
+  const ex=document.getElementById('cfb'); if(ex) ex.remove();
+  const b=document.createElement('div'); b.id='cfb';
+  b.style.cssText='position:fixed;bottom:20px;right:20px;background:#0f172a;color:#f1f5f9;padding:14px 16px;border-radius:8px;max-width:380px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:100;font-size:12px;';
+  b.innerHTML=`<div style="font-weight:600;margin-bottom:6px;">Open Cowork and paste this to Claude:</div>
+    <textarea style="width:100%;background:#1e293b;color:#e2e8f0;border:none;border-radius:4px;padding:8px;font-size:11px;resize:none;font-family:inherit;" rows="6">${msg}</textarea>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px;gap:8px;">
+      <button onclick="document.getElementById('cfb').remove()" style="font-size:11px;background:none;color:#94a3b8;border:1px solid #334155;padding:4px 10px;border-radius:4px;cursor:pointer;">Close</button>
+      <button onclick="(function(){var t=document.querySelector('#cfb textarea');t.select();document.execCommand('copy');})()" style="font-size:11px;background:#3b82f6;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-weight:600;">Copy</button>
+    </div>`;
+  document.body.appendChild(b);
+}
+
+// ── Refresh: trigger scheduled task ───────────────────────────────────────────
+async function runBrief(){
+  if(!window.cowork?.runScheduledTask){showToast('Open this brief inside Cowork to use Refresh.');return;}
+  showToast('⏳ Checking emails & Teams…');
+  try {
+    await window.cowork.runScheduledTask('brief-actions');
+    showToast('✓ Refresh running — check back in a moment.');
+  } catch(e){ showToast('Error: '+(e.message||e)); }
+}
+
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+
+function saveHTMLFile(){
+  if(!window.cowork?.callMcpTool) return;
+  try {
+    const serialized = document.documentElement.outerHTML;
+    const b64 = btoa(unescape(encodeURIComponent(serialized)));
+    window.cowork.callMcpTool('mcp__workspace__bash',{command:
+      `python3 -c "import base64,os; sl=os.listdir('/sessions'); m=next(('/sessions/'+s+'/mnt/Claude' for s in sl if os.path.exists('/sessions/'+s+'/mnt/Claude')),None); open(m+'/Claude OS/Chenco/daily-brief.html','w',encoding='utf-8').write(base64.b64decode('${b64}').decode('utf-8'))" && echo ok`
+    });
+  } catch(e){}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  render('today');
+  render('ongoing');
+});
+</script>
+</body>
+</html>
