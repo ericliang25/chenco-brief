@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chenco Daily Brief</title>
@@ -154,18 +152,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="header">
   <div class="header-left">
     <span class="header-title">Chenco Daily Brief</span>
-    <span class="header-date">Tuesday, June 30, 2026</span>
+    <span class="header-date">Wednesday, July 1, 2026</span>
   </div>
   <div style="display:flex;gap:5px;flex-shrink:0;">
     <button class="sync-btn" onclick="syncToChat()" title="Mark done items in TASKS.md, record new tasks, and save HTML to OneDrive">Sync</button>
     <button class="sync-btn" onclick="runBrief()" title="Check email &amp; Teams for new action items">↺ Refresh</button>
+    <button class="sync-btn" onclick="pushToGitHub()" title="Push brief to chenco-brief.pages.dev">Pushing…</button>
   </div>
 </div>
 
 <!-- RATES -->
 <div class="data-bar">
-  <div class="m"><span class="ml">10Y UST</span><span class="mv">4.37%</span><span class="md dn">▼ 8bps</span></div>
-  <div class="m"><span class="ml">SOFR</span><span class="mv">3.62%</span><span class="md fl">flat</span></div>
+  <div class="m"><span class="ml">10Y UST</span><span class="mv">4.38%</span><span class="md up">▲ 1bp</span></div>
+  <div class="m"><span class="ml">SOFR</span><span class="mv">4.14%</span><span class="md fl">30d avg</span></div>
   <div class="m"><span class="ml">Fed Funds</span><span class="mv">4.25–4.50%</span><span class="md fl">held</span></div>
   <div class="m"><span class="ml">10Y–2Y</span><span class="mv">+27bps</span><span class="md dn">▼ 7bps</span></div>
 </div>
@@ -178,7 +177,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div class="m"><span class="ml">VNQ</span><span class="mv">—</span><span class="md fl">n/a</span></div>
   <div class="m"><span class="ml">DXY</span><span class="mv">—</span><span class="md fl">n/a</span></div>
   <div class="m"><span class="ml">Brent</span><span class="mv">$73.22</span><span class="md up">▲ 0.10%</span></div>
-  <span class="as-of">as of Jun 29 close &nbsp;<a href="https://finance.yahoo.com/markets/" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px;">↗ live</a></span>
+  <span class="as-of">as of Jun 30 close &nbsp;<a href="https://finance.yahoo.com/markets/" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px;">↗ live</a></span>
 </div>
 
 <div class="main">
@@ -192,15 +191,147 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button class="ghost-btn" onclick="uncheckAll('today')">Uncheck All</button>
       </div>
     </div>
-    <div class="task-list" id="today-list"></div>
+    <div class="task-list" id="today-list"><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',0)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tu">Urgent</span>CAMC Operating Agreement — Execute First Amendment in Triplicate</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Fernando Bensuaski sent First Amendment to CAMC Operating Agreement (7/1). Execute in triplicate — Renee and Eric each keep originals. Amends CAMC to allow issuance of non-voting membership rights. URGENT.</div>
+    <button class="note-more" data-nid="today" data-ntl="CAMC Operating Agreement — Execute First Amendment in Triplicate" onclick="toggleNote(this)" style="display: block;">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('today',0)">✎</button></div><div class="edit-form" id="ef-today-0">
+      <input class="ei" id="et-today-0" value="CAMC Operating Agreement — Execute First Amendment in Triplicate" placeholder="Title">
+      <textarea class="ei" id="en-today-0" rows="2">Fernando Bensuaski sent First Amendment to CAMC Operating Agreement (7/1). Execute in triplicate — Renee and Eric each keep originals. Amends CAMC to allow issuance of non-voting membership rights. URGENT.</textarea>
+      <select class="ei-select" id="ep-today-0">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',0)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',0)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',0)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',1)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tu">Urgent</span>ECI — Justin Needs Position (Carry or Exit)</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Justin forwarded ECI/DLMI update to Eric, Jack, Nathan (6/30). Jack asked if exit possible. Justin needs indication in next day or so. Options: (a) redeem at slight loss vs. last NAV, or (b) roll into DiamondLake Minerals (DLMI) — 3–5yr RWA + SteelWave CRE pipeline. Original ~$350K.</div>
+    <button class="note-more" data-nid="today" data-ntl="ECI — Justin Needs Position (Carry or Exit)" onclick="toggleNote(this)" style="display: block;">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('today',1)">✎</button></div><div class="edit-form" id="ef-today-1">
+      <input class="ei" id="et-today-1" value="ECI — Justin Needs Position (Carry or Exit)" placeholder="Title">
+      <textarea class="ei" id="en-today-1" rows="2">Justin forwarded ECI/DLMI update to Eric, Jack, Nathan (6/30). Jack asked if exit possible. Justin needs indication in next day or so. Options: (a) redeem at slight loss vs. last NAV, or (b) roll into DiamondLake Minerals (DLMI) — 3–5yr RWA + SteelWave CRE pipeline. Original ~$350K.</textarea>
+      <select class="ei-select" id="ep-today-1">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',1)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',1)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',1)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',2)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tu">Urgent</span>PRP17 May Report — CITIC Can’t Open Link</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Kiki at CITIC Trust replied link in May 2026 fund report email is broken (6/30). Renee OOO until 7/16. Resend working link to kikili@citictrust.com.hk.</div>
+    <button class="note-more" data-nid="today" data-ntl="PRP17 May Report — CITIC Can’t Open Link" onclick="toggleNote(this)" style="display: block;">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('today',2)">✎</button></div><div class="edit-form" id="ef-today-2">
+      <input class="ei" id="et-today-2" value="PRP17 May Report — CITIC Can’t Open Link" placeholder="Title">
+      <textarea class="ei" id="en-today-2" rows="2">Kiki at CITIC Trust replied link in May 2026 fund report email is broken (6/30). Renee OOO until 7/16. Resend working link to kikili@citictrust.com.hk.</textarea>
+      <select class="ei-select" id="ep-today-2">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',2)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',2)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',2)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',3)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Invoice</span>Castlewood Park — Prepare PRP Interest Invoice for 7/13 Close</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Bascom (jferguson) confirmed close 7/13/26 (6/30). Need Renee to send invoice for PRP interest earned with close date 7/13. Bascom also collecting internal BG co-invest interest.</div>
+    <button class="note-more" data-nid="today" data-ntl="Castlewood Park — Prepare PRP Interest Invoice for 7/13 Close" onclick="toggleNote(this)" style="display: block;">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('today',3)">✎</button></div><div class="edit-form" id="ef-today-3">
+      <input class="ei" id="et-today-3" value="Castlewood Park — Prepare PRP Interest Invoice for 7/13 Close" placeholder="Title">
+      <textarea class="ei" id="en-today-3" rows="2">Bascom (jferguson) confirmed close 7/13/26 (6/30). Need Renee to send invoice for PRP interest earned with close date 7/13. Bascom also collecting internal BG co-invest interest.</textarea>
+      <select class="ei-select" id="ep-today-3">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',3)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',3)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',3)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',4)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Review</span>Jasmine Syndication — Review FYI from Justin</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Justin forwarded to Eric and Nathan, FYI with attachments (6/30). Review.</div>
+    <button class="note-more" data-nid="today" data-ntl="Jasmine Syndication — Review FYI from Justin" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('today',4)">✎</button></div><div class="edit-form" id="ef-today-4">
+      <input class="ei" id="et-today-4" value="Jasmine Syndication — Review FYI from Justin" placeholder="Title">
+      <textarea class="ei" id="en-today-4" rows="2">Justin forwarded to Eric and Nathan, FYI with attachments (6/30). Review.</textarea>
+      <select class="ei-select" id="ep-today-4">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',4)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',4)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',4)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',5)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Review</span>FIRPTA Memo — Review from Fernando</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Fernando wrote short memo (6/30). Conclusion: PRPs and Blockers in full compliance. Has attachment — review when time allows.</div>
+    <button class="note-more" data-nid="today" data-ntl="FIRPTA Memo — Review from Fernando" onclick="toggleNote(this)" style="display: block;">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('today',5)">✎</button></div><div class="edit-form" id="ef-today-5">
+      <input class="ei" id="et-today-5" value="FIRPTA Memo — Review from Fernando" placeholder="Title">
+      <textarea class="ei" id="en-today-5" rows="2">Fernando wrote short memo (6/30). Conclusion: PRPs and Blockers in full compliance. Has attachment — review when time allows.</textarea>
+      <select class="ei-select" id="ep-today-5">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',5)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',5)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',5)">Save</button>
+      </div></div><div class="view-more"><button class="view-more-btn" onclick="toggleExpand('today')">Show 5 more ▼</button></div></div>
     <div class="add-row">
       <button class="add-btn" onclick="showAdd('today')">＋ Add item</button>
       <div class="add-form" id="today-add">
-        <input class="ei" id="today-add-t" placeholder="Title…" />
+        <input class="ei" id="today-add-t" placeholder="Title…">
         <textarea class="ei" id="today-add-n" rows="2" placeholder="Notes (optional)…"></textarea>
         <select class="ei-select" id="today-add-p">
           <option value="1">P1 — Urgent</option>
-          <option value="2" selected>P2 — Normal</option>
+          <option value="2" selected="">P2 — Normal</option>
           <option value="3">P3 — Low</option>
         </select>
         <div class="btn-row">
@@ -220,15 +351,144 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button class="ghost-btn" onclick="uncheckAll('ongoing')">Uncheck All</button>
       </div>
     </div>
-    <div class="task-list" id="ongoing-list"></div>
+    <div class="task-list" id="ongoing-list"><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',0)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag ti">Admin</span>Green Street Reports (Apr/May 2026) — Review in SharePoint</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Nathan uploaded Sector Updates, Sector Insights, CPPI. (6/17)</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="Green Street Reports (Apr/May 2026) — Review in SharePoint" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',0)">✎</button></div><div class="edit-form" id="ef-ongoing-0">
+      <input class="ei" id="et-ongoing-0" value="Green Street Reports (Apr/May 2026) — Review in SharePoint" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-0" rows="2">Nathan uploaded Sector Updates, Sector Insights, CPPI. (6/17)</textarea>
+      <select class="ei-select" id="ep-ongoing-0">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',0)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',0)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',0)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',1)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag ti">Teams</span>Teams: Confirm PPM Wording</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Justin asked if Claude-drafted Interim Financing section works; Derek/Fernando prefer v2. Eric go-ahead needed. (6/17)</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="Teams: Confirm PPM Wording" onclick="toggleNote(this)" style="display: block;">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',1)">✎</button></div><div class="edit-form" id="ef-ongoing-1">
+      <input class="ei" id="et-ongoing-1" value="Teams: Confirm PPM Wording" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-1" rows="2">Justin asked if Claude-drafted Interim Financing section works; Derek/Fernando prefer v2. Eric go-ahead needed. (6/17)</textarea>
+      <select class="ei-select" id="ep-ongoing-1">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',1)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',1)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',1)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',2)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Pending</span>CHC/CRRM Structure Adjustment to AMCs</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Structure adjustment pending.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="CHC/CRRM Structure Adjustment to AMCs" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',2)">✎</button></div><div class="edit-form" id="ef-ongoing-2">
+      <input class="ei" id="et-ongoing-2" value="CHC/CRRM Structure Adjustment to AMCs" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-2" rows="2">Structure adjustment pending.</textarea>
+      <select class="ei-select" id="ep-ongoing-2">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',2)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',2)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',2)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',3)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Pending</span>W-8BEN Renewal</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Send renewal forms to all investors.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="W-8BEN Renewal" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',3)">✎</button></div><div class="edit-form" id="ef-ongoing-3">
+      <input class="ei" id="et-ongoing-3" value="W-8BEN Renewal" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-3" rows="2">Send renewal forms to all investors.</textarea>
+      <select class="ei-select" id="ep-ongoing-3">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',3)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',3)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',3)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',4)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag ti">Manual</span>AUM Merge</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Super long term goal.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="AUM Merge" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',4)">✎</button></div><div class="edit-form" id="ef-ongoing-4">
+      <input class="ei" id="et-ongoing-4" value="AUM Merge" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-4" rows="2">Super long term goal.</textarea>
+      <select class="ei-select" id="ep-ongoing-4">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',4)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',4)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',4)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',5)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag ti">Manual</span>ALO2 Shell PPM</div>
+        
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',5)">✎</button></div><div class="edit-form" id="ef-ongoing-5">
+      <input class="ei" id="et-ongoing-5" value="ALO2 Shell PPM" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-5" rows="2"></textarea>
+      <select class="ei-select" id="ep-ongoing-5">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',5)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',5)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',5)">Save</button>
+      </div></div><div class="view-more"><button class="view-more-btn" onclick="toggleExpand('ongoing')">Show 18 more ▼</button></div></div>
     <div class="add-row">
       <button class="add-btn" onclick="showAdd('ongoing')">＋ Add item</button>
       <div class="add-form" id="ongoing-add">
-        <input class="ei" id="ongoing-add-t" placeholder="Title…" />
+        <input class="ei" id="ongoing-add-t" placeholder="Title…">
         <textarea class="ei" id="ongoing-add-n" rows="2" placeholder="Notes (optional)…"></textarea>
         <select class="ei-select" id="ongoing-add-p">
           <option value="1">P1 — Urgent</option>
-          <option value="2" selected>P2 — Normal</option>
+          <option value="2" selected="">P2 — Normal</option>
           <option value="3">P3 — Low</option>
         </select>
         <div class="btn-row">
@@ -243,10 +503,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div class="section full open" id="macro-sec">
     <div class="sec-head" onclick="tog('macro-sec')"><span class="sec-title">Macro</span><span class="sec-arrow">▲</span></div>
     <div class="sec-body">
-      <div class="bul"><strong>Rates</strong> — 10Y: 4.37% | 2Y: 4.10% | SOFR: 3.62% (flat) | Fed Funds: 4.25–4.50% (held) | 10Y–2Y: +27bps. (as of Jun 29)</div>
-      <div class="bul"><strong>Fed Hold Consensus</strong> — Reuters survey: 75%+ of economists expect Fed to hold through 2026. FOMC members and primary dealers still flag hike risk. June dot plot: one projected 2026 hike. Markets pricing in three hikes. (GlobeSt, 6/29)</div>
-      <div class="bul"><strong>4.5% Threshold Watch</strong> — MSCI flags 4.5% 10Y as the key inflection point for CRE pricing and cap rate expansion. Current 4.37% sits below — worth monitoring as we head into H2. (MSCI, 6/29)</div>
-      <div class="bul"><strong>Equity Markets</strong> — S&amp;P 500: 7,440 (+1.18%), Dow: 52,183 (+0.59%), NAREIT: 866 (-0.57%), Brent: $73.22 (+0.10%) as of Jun 29 close.</div>
+      <div class="bul"><strong>Rates</strong> — 10Y UST: 4.38% (▲1bp) | SOFR 30-day avg: 4.14% | Fed Funds: 4.25–4.50% (held) | 10Y–2Y: +27bps. (as of Jun 30)</div>
+      <div class="bul"><strong>Markets — Best Quarter Since 2020</strong> — Q2 2026 was the strongest quarter for U.S. equities since Q4 2020. S&amp;P 500: 7,440 (+1.18%), Dow: 52,183 (+0.59%), NAREIT: 866 (-0.57%), Brent: $73.22 as of Jun 30 close. (TheStreet, 6/30)</div>
+      <div class="bul"><strong>USMCA Tariff Framework</strong> — U.S.-Mexico-Canada trade deal remains in effect heading into H2 2026, anchoring cross-border supply chain activity. Industrial and logistics near border markets are primary CRE beneficiaries. (6/30)</div>
+      <div class="bul"><strong>Freddie Mac IO Loans</strong> — Freddie expanded IO product eligibility for qualifying multifamily borrowers — lower debt service coverage requirements during IO period, meaningful for sponsors underwriting in today's rate environment. (7/1)</div>
     </div>
   </div>
 
@@ -255,20 +515,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <div class="sec-head" onclick="tog(‘cre-sec’)"><span class="sec-title">CRE</span><span class="sec-arrow">▲</span></div>
     <div class="sec-body">
       <div class="sub">Multifamily</div>
-      <div class="bul"><strong>NYC Rent Freeze Official</strong> — NYC Rent Guidelines Board voted to freeze rents for stabilized apartments — biggest housing decision of 2026. Lawsuits expected to follow. (CRE Daily, 6/29)</div>
-      <div class="bul"><strong>Student Housing Rents Steady</strong> — Strong preleasing at major universities supporting modest rent growth heading into the academic year. (GlobeSt, 6/29)</div>
+      <div class="bul"><strong>1BR Rents Positive YoY</strong> — National 1-bedroom rent growth turned positive year-over-year in June 2026 for the first time since 2023 — supply absorption finally running ahead of deliveries in most major markets. (CRE Daily, 7/1)</div>
+      <div class="bul"><strong>Construction Code Costs +10%</strong> — Updated building codes driving an estimated 10% increase in multifamily construction costs, further constraining new supply. Supports rent growth in existing assets. (CRE Daily, 7/1)</div>
+      <div class="bul"><strong>Sun Belt Apartment Demand</strong> — South continues to absorb new supply faster than any other region, with Atlanta, Dallas, and Phoenix leading net absorption in Q2 2026. (GlobeSt, 6/30)</div>
 
-      <div class="sub">Capital Markets / M&amp;A</div>
-      <div class="bul"><strong>Bridgepoint / Kayne Anderson</strong> — UK buyout firm Bridgepoint reportedly acquiring Kayne Anderson Real Estate platform for ~$1B. Adds healthcare and housing-linked strategies — signal that institutional capital still has conviction in income-focused real estate. (GlobeSt, 6/29)</div>
-      <div class="bul"><strong>CRE Price Index Divergence</strong> — RCA CPPI and CCRSI sending conflicting signals; understanding the difference is critical for capital allocation and risk management now. (GlobeSt, 6/29)</div>
+      <div class="sub">Senior Housing</div>
+      <div class="bul"><strong>Occupancy Above Pre-Pandemic Levels</strong> — Senior housing occupancy now exceeds 2019 levels nationally. Rents rising and institutional investors pouring capital into the sector — Green Street calls it one of CRE's strongest-performing sectors over the next decade. (CRE Daily, 7/1)</div>
 
-      <div class="sub">Office</div>
-      <div class="bul"><strong>REIT Pricing Power</strong> — Office REITs securing higher starting rents and longer leases than private landlords, even as private owners post faster rent growth over 24 months. (GlobeSt, 6/29)</div>
+      <div class="sub">Industrial</div>
+      <div class="bul"><strong>USMCA Supply Chain Shift</strong> — Near-shoring activity accelerating in border and interior industrial markets. Industrial demand holding firm even as some e-commerce tailwinds fade; USMCA frameworks anchoring long-term lease demand. (6/30)</div>
 
-      <div class="sub">Retail</div>
-      <div class="bul"><strong>Saks Post-Chapter 11</strong> — Saks emerged from bankruptcy and repositioning as focused luxury platform; key landlords and vendors watching. (GlobeSt, 6/29)</div>
-      <div class="bul"><strong>SoHo Trophy Retail Cycle</strong> — Capital chasing small-format luxury flagships across 6 submarkets led by SoHo. (GlobeSt, 6/29)</div>
-      <div class="bul"><strong>Wheeler REIT Portfolio Sale</strong> — Selling 50%+ of grocery-anchored portfolio despite hot market — capital structure forcing asset sales. REIT case study. (GlobeSt, 6/29)</div>
+      <div class="sub">Capital Markets</div>
+      <div class="bul"><strong>Digital Realty / Blackstone — $3.5B Data Center Deal</strong> — Digital Realty selling a data center portfolio to Blackstone for ~$3.5B. Signals continued institutional conviction in digital infrastructure; cap rates tightening in that niche even as broader CRE reprices. (GlobeSt, 6/30)</div>
+      <div class="bul"><strong>Job Growth Divergence — CRE Watch</strong> — Uneven job growth across metros creating bifurcated office and multifamily demand signals; Sun Belt tech and financial services markets outperforming. (GlobeSt, 6/30)</div>
+
+      <div class="sub">Policy</div>
+      <div class="bul"><strong>IRS Opportunity Zone Clarification</strong> — IRS issued guidance clarifying QOZ reinvestment timelines and eligible property improvements. Review implications for any OZ exposure in the portfolio. (7/1)</div>
+      <div class="bul"><strong>NYC FY2027 Budget</strong> — NYC adopted FY2027 budget with property tax adjustments and affordable housing mandates. Relevant context for any NYC-adjacent exposure. (GlobeSt, 6/30)</div>
     </div>
   </div>
 
@@ -276,16 +539,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div class="section full" id="web-sec">
     <div class="sec-head" onclick="tog(‘web-sec’)"><span class="sec-title">Webinars</span><span class="sec-arrow">▼</span></div>
     <div class="sec-body">
-      <div class="bul"><strong>Bisnow</strong> — Education webinars July 9, 16, 23 (various CRE topics). See bisnow.com for details.</div>
-      <div class="bul"><strong>Realcomm</strong> — July 23, 9am PT: "Optimizing Building Energy Use: Data, Controls, and Integrated Workflow."</div>
-      <div class="bul"><strong>GlobeSt Women of Influence</strong> — July 13–14, Denver, CO. Code NEWSLETTER50 saves $50.</div>
+      <div class="bul"><strong>GlobeSt Multifamily Fall Owners Forum</strong> — October 21–22, San Diego, CA. Senior housing, Sun Belt multifamily, and capital markets programming. Register at globest.com.</div>
+      <div class="bul"><strong>GlobeSt Women of Influence</strong> — July 13–14, Denver, CO. Code NEWSLETTER50 saves $50. Register at globest.com.</div>
+      <div class="bul"><strong>Bisnow</strong> — CRE education webinars July 9, 16, 23 (various topics). See bisnow.com for details.</div>
     </div>
     </div>
   </div>
 
-</div>
 
-<div class="footer">Sources: CRE Daily (6/29) · GlobeSt (6/29) · sofrrate.com · Federal Reserve H.15 · MSCI Real Assets · Outlook Inbox (6/29–6/30) — Brief auto-generated Jun 30, 2026</div>
+
+<div class="footer">Sources: CRE Daily (7/1) · GlobeSt (7/1, 6/30) · sofrrate.com · NYFED SOFR · TheStreet (6/30) · Outlook Inbox (6/30–7/1) — Brief auto-generated Jul 1, 2026</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -298,7 +561,7 @@ window.addEventListener('beforeunload', e => {
   if(dirty){ e.preventDefault(); e.returnValue = ''; }
 });
 
-const data = {"today": [{"tag": "tu", "tl": "Urgent", "title": "ECI \u2014 Justin Needs Position Today", "note": "Justin forwarded ECI/DLMI update to Eric, Jack, Nathan. Jack asked if exit is possible. Justin: \u201cLet me know soon \u2014 need to give Mitch an indication in the next day or so.\u201d ECI transitioning from crypto/digital to DLMI (RWA + SteelWave CRE pipeline). 3\u20135yr illiquid hold. Respond today. (6/30)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1-SoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVS0jQ5AAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tu", "tl": "Urgent", "title": "PRP17 May Report \u2014 CITIC Can\u2019t Open Link", "note": "Kiki at CITIC Trust replied the link in the May 2026 fund report email is broken and they cannot open it. Renee is OOO until 7/16. Resend a working link to kikili@citictrust.com.hk. (6/30)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1-SoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVTdPhMAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "ti", "tl": "FYI", "title": "Bascom Funding Request \u2014 Week of 6/29/26 ($525K)", "note": "To: Derek (CC: Eric). Two deposits needed in next 2 weeks: (1) Altera Venture (Irving TX) \u2014 $250K, PSA in negotiation, wiring instructions TBD from Bascom; (2) Little Mountain (Mount Vernon WA) \u2014 $275K, PSA in negotiation, wiring instructions TBD from Meridian. (6/30)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1-SoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVTaYtiAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Wire", "title": "Summit at Valencia \u2014 Capital Call 6: Wire $81,645.27", "note": "Pacific Rim Properties XIX (Chenco) owes $81,645.27 for Capital Call 6 true-up. Wire to Summit at Valencia Property LLC, BofA acct 1453931847, ABA 026009593. Buildings I & II selling next week; Building III targeting $375\u2013500K annual cash flow. Q3 distributions starting. (6/28)", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1-SoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVQCfhMAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Review", "title": "Steelwave Weekly Deal Call \u2014 Review Deal List", "note": "Ianthe Schaub circulated deal list for weekly call (6/29). Chenco team (Justin, Derek, Andrew, Fred) included. Review attachment.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1-SoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVS0jQtAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Review", "title": "MS365 Quarantine \u2014 1 New Message Flagged", "note": "1 message flagged as potential phish. Review at Microsoft Security Center within 30 days. (6/29)", "done": false, "link": ""}, {"tag": "tp", "tl": "Carry", "title": "Magnolia Flats Wires \u2014 PRP XVII & XVIII \u2014 Verify Released", "note": "Paige Tsay sent corrected wiring instructions 6/26 for Realm/Magnolia Flats Riverside. Confirm Renee released both wires. (6/26)", "done": false, "link": ""}, {"tag": "tp", "tl": "Carry", "title": "Van Allen Financial Report \u2014 Wrong Financials Sent to FF Capital", "note": "Allen (FF Capital) replied April financials sent were for Highlands, not Van Allen. Locate correct Van Allen April financials and resend. (6/25)", "done": false, "link": ""}, {"tag": "tp", "tl": "Carry", "title": "CTI Q&A \u2014 Review Jack Lin Response to CTI", "note": "Jack proposed quarterly video Q&A channel for PRP17 investors (H2 2026). Review and confirm alignment. (6/25)", "done": false, "link": ""}, {"tag": "tp", "tl": "Carry", "title": "Master & Investor Q&A \u2014 Updated Drafts from Justin", "note": "Revised Master and Investor Q&A with change log. Non-nominal changes; review and confirm. (6/24)", "done": false, "link": ""}], "ongoing": [{"tag": "tu", "tl": "Urgent", "title": "Bascom Acquisition — Decision ASAP (Domain 3201 + Castlewood Park)", "note": "Justin FWD. Crossed deal — two existing Bascom deals must be sold. Xinchen not long-term LP. Justin: let me know ASAP. (6/24)", "done": true, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KXAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tu", "tl": "Urgent", "title": "Sunset Corporate Center — Review Revised Board Resolutions (CIIC + PRP II)", "note": "Andrew revised and reattached Resolutions for EWB refi. Review and comment. Also pinged via Teams. (6/24)", "done": true}, {"tag": "tu", "tl": "Urgent", "title": "Teams: AUM Deals + IRR — OVERDUE (was due 6/24 EOD)", "note": "Justin asked which AUM deals need review and help finalizing IRR calculations. Due Derek 6/24 EOD — now overdue. (6/23)", "done": false}, {"tag": "tp", "tl": "Respond", "title": "Roosevelt Road Assemblage — Funding Policy Decision", "note": "Renee fwd: excess funding from Ian/Meridian should return to CRRM/PRPs, not reallocated internally. Justin to advise; Eric looped in. (6/24)", "done": false}, {"tag": "tp", "tl": "Respond", "title": "FW: ACII — Review from Justin Hsu", "note": "Justin forwarded with attachment (6/24 ~4:42pm PT). Review and respond if needed.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KTAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "FW: America Center Investments — Review from Justin Hsu", "note": "Justin forwarded with attachment (6/24 ~4:42pm PT). Review and respond.", "done": false, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KSAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "Northridge — Review from Justin Hsu", "note": "Justin sent directly to Eric + Nathan with attachment (6/24 ~11am PT). Review and respond.", "done": false}, {"tag": "tp", "tl": "Decision", "title": "July Travel Schedule — Advise Nathan", "note": "Nathan asking for July schedule. Reply when ready. (6/24)", "done": true}, {"tag": "tp", "tl": "Respond", "title": "Teams: Possible Notarization — Andrew Chen / Castlewood Escrow", "note": "Andrew waiting on EWB + escrow to confirm Resolution language. Closing doc may need Justin signature + notarization. (6/23)", "done": false}, {"tag": "tp", "tl": "Admin", "title": "SW Marina Park GP — 06/24 Distribution: Log in Fund Records", "note": "SteelWave: $59,550 from LPF Marina Park (Jan-Jun 2026). Track in AUM/fund records.", "done": false}, {"tag": "tp", "tl": "Admin", "title": "Pasadena Towers — Distribution 3: Verify Fund Records", "note": "Harbor processed; Bascom confirming $2,958.78. Verify Chenco share logged. (6/23)", "done": false}, {"tag": "tp", "tl": "Respond", "title": "FW: Talus Final Distribution — Review", "note": "Andrew Chen fwd from Brenda Zalke (IHP) re: final distribution. Pacific Life on thread. Has attachment. (6/23)", "done": false}, {"tag": "tp", "tl": "Admin", "title": "Bascom Funding Request — Week of 6/22/26", "note": "$1,186,400 needed over next 2 weeks. C. Liu (Bascom) to Derek and team. (6/23)", "done": false}, {"tag": "tp", "tl": "Admin", "title": "1640 Sepulveda — May 2026 Financials", "note": "Tiarna sent May 2026 PDF report (6/19). Review and file.", "done": false}, {"tag": "ti", "tl": "Admin", "title": "Van Allen Financial Report — Review & File", "note": "Monthly report from Tiarna. Steven (FF Capital) requested April financials 6/18.", "done": false}, {"tag": "ti", "tl": "Admin", "title": "Green Street Reports (Apr/May 2026) — Review in SharePoint", "note": "Nathan uploaded Sector Updates, Sector Insights, CPPI. (6/17)", "done": false}, {"tag": "ti", "tl": "Teams", "title": "Teams: Confirm PPM Wording", "note": "Justin asked if Claude-drafted Interim Financing section works; Derek/Fernando prefer v2. Eric go-ahead needed. (6/17)", "done": false}, {"tag": "ti", "tl": "Info", "title": "FW: ECI Strategic Market Update — Review", "note": "Justin forwarded ECI update. Review when time permits. (6/23)", "done": false}, {"tag": "tp", "tl": "Pending", "title": "CHC/CRRM Structure Adjustment to AMCs", "note": "Structure adjustment pending.", "done": false}, {"tag": "tp", "tl": "Pending", "title": "W-8BEN Renewal", "note": "Send renewal forms to all investors.", "done": false}, {"tag": "tp", "tl": "Pending", "title": "CITIC Trust Monthly Video Calls", "note": "Confirm calendar — CITIC accepted monthly video arrangement (6/10).", "done": false}, {"tag": "ti", "tl": "Manual", "title": "AUM Merge", "note": "Super long term goal.", "done": false}, {"tag": "ti", "tl": "Manual", "title": "ALO2 Shell PPM", "note": "", "done": false}, {"tag": "ti", "tl": "Manual", "title": "Companies Note", "note": "Need more clarification from FB email.", "done": false}]};
+const data = {"today": [{"tag": "tu", "tl": "Urgent", "title": "CAMC Operating Agreement — Execute First Amendment in Triplicate", "note": "Fernando Bensuaski sent First Amendment to CAMC Operating Agreement (7/1). Execute in triplicate — Renee and Eric each keep originals. Amends CAMC to allow issuance of non-voting membership rights. URGENT.", "done": false, "link": ""}, {"tag": "tu", "tl": "Urgent", "title": "ECI — Justin Needs Position (Carry or Exit)", "note": "Justin forwarded ECI/DLMI update to Eric, Jack, Nathan (6/30). Jack asked if exit possible. Justin needs indication in next day or so. Options: (a) redeem at slight loss vs. last NAV, or (b) roll into DiamondLake Minerals (DLMI) — 3–5yr RWA + SteelWave CRE pipeline. Original ~$350K.", "done": false, "link": ""}, {"tag": "tu", "tl": "Urgent", "title": "PRP17 May Report — CITIC Can’t Open Link", "note": "Kiki at CITIC Trust replied link in May 2026 fund report email is broken (6/30). Renee OOO until 7/16. Resend working link to kikili@citictrust.com.hk.", "done": false, "link": ""}, {"tag": "tp", "tl": "Invoice", "title": "Castlewood Park — Prepare PRP Interest Invoice for 7/13 Close", "note": "Bascom (jferguson) confirmed close 7/13/26 (6/30). Need Renee to send invoice for PRP interest earned with close date 7/13. Bascom also collecting internal BG co-invest interest.", "done": false, "link": ""}, {"tag": "tp", "tl": "Review", "title": "Jasmine Syndication — Review FYI from Justin", "note": "Justin forwarded to Eric and Nathan, FYI with attachments (6/30). Review.", "done": false, "link": ""}, {"tag": "tp", "tl": "Review", "title": "FIRPTA Memo — Review from Fernando", "note": "Fernando wrote short memo (6/30). Conclusion: PRPs and Blockers in full compliance. Has attachment — review when time allows.", "done": false, "link": ""}, {"tag": "tp", "tl": "Admin", "title": "Tri-City Manager LLC — Liquidating Distribution: Verify & Log", "note": "Harbor (Robert) processing final liquidating distribution from Tri-City Manager LLC (6/30). Chenco on distribution list. Verify share received and log in fund records.", "done": false, "link": ""}, {"tag": "tp", "tl": "Review", "title": "MS365 Quarantine — 1 New Message (7/1)", "note": "1 message flagged as potential spam. Review at Microsoft Security Center within 30 days. (7/1)", "done": false, "link": ""}, {"tag": "tp", "tl": "Carry", "title": "Bascom Funding Request — Week of 6/29/26 ($525K)", "note": "To: Derek (CC: Eric). Two deposits needed in next 2 weeks: (1) Altera Venture (Irving TX) — $250K initial deposit, PSA in negotiation; (2) Little Mountain (Mount Vernon WA) — $275K initial deposit. Wiring instructions TBD from Bascom/Meridian. (6/30)", "done": false, "link": ""}, {"tag": "ti", "tl": "FYI", "title": "CTI Q&A — CITIC Confirmed Schedule", "note": "Kiki replied positively to Jack’s proposed quarterly video Q&A channel for PRP17 investors (H2 2026). CITIC on board. (6/30)", "done": false, "link": ""}, {"tag": "tp", "tl": "Carry", "title": "Steelwave Weekly Deal Call — Review Deal List", "note": "Ianthe Schaub circulated deal list for weekly call (6/29). Chenco team (Justin, Derek, Andrew, Fred) included. Review attachment.", "done": false, "link": ""}], "ongoing": [{"tag": "tu", "tl": "Urgent", "title": "Bascom Acquisition — Decision ASAP (Domain 3201 + Castlewood Park)", "note": "Justin FWD. Crossed deal — two existing Bascom deals must be sold. Xinchen not long-term LP. Justin: let me know ASAP. (6/24)", "done": true, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KXAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tu", "tl": "Urgent", "title": "Sunset Corporate Center — Review Revised Board Resolutions (CIIC + PRP II)", "note": "Andrew revised and reattached Resolutions for EWB refi. Review and comment. Also pinged via Teams. (6/24)", "done": true}, {"tag": "tu", "tl": "Urgent", "title": "Teams: AUM Deals + IRR — OVERDUE (was due 6/24 EOD)", "note": "Justin asked which AUM deals need review and help finalizing IRR calculations. Due Derek 6/24 EOD — now overdue. (6/23)", "done": true}, {"tag": "tp", "tl": "Respond", "title": "Roosevelt Road Assemblage — Funding Policy Decision", "note": "Renee fwd: excess funding from Ian/Meridian should return to CRRM/PRPs, not reallocated internally. Justin to advise; Eric looped in. (6/24)", "done": true}, {"tag": "tp", "tl": "Respond", "title": "FW: ACII — Review from Justin Hsu", "note": "Justin forwarded with attachment (6/24 ~4:42pm PT). Review and respond if needed.", "done": true, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KTAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "FW: America Center Investments — Review from Justin Hsu", "note": "Justin forwarded with attachment (6/24 ~4:42pm PT). Review and respond.", "done": true, "link": "https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVPl9KSAAA%3D&exvsurl=1&viewmodel=ReadMessageItem"}, {"tag": "tp", "tl": "Respond", "title": "Northridge — Review from Justin Hsu", "note": "Justin sent directly to Eric + Nathan with attachment (6/24 ~11am PT). Review and respond.", "done": true}, {"tag": "tp", "tl": "Decision", "title": "July Travel Schedule — Advise Nathan", "note": "Nathan asking for July schedule. Reply when ready. (6/24)", "done": true}, {"tag": "tp", "tl": "Respond", "title": "Teams: Possible Notarization — Andrew Chen / Castlewood Escrow", "note": "Andrew waiting on EWB + escrow to confirm Resolution language. Closing doc may need Justin signature + notarization. (6/23)", "done": true}, {"tag": "tp", "tl": "Admin", "title": "SW Marina Park GP — 06/24 Distribution: Log in Fund Records", "note": "SteelWave: $59,550 from LPF Marina Park (Jan-Jun 2026). Track in AUM/fund records.", "done": true}, {"tag": "tp", "tl": "Admin", "title": "Pasadena Towers — Distribution 3: Verify Fund Records", "note": "Harbor processed; Bascom confirming $2,958.78. Verify Chenco share logged. (6/23)", "done": true}, {"tag": "tp", "tl": "Respond", "title": "FW: Talus Final Distribution — Review", "note": "Andrew Chen fwd from Brenda Zalke (IHP) re: final distribution. Pacific Life on thread. Has attachment. (6/23)", "done": true}, {"tag": "tp", "tl": "Admin", "title": "Bascom Funding Request — Week of 6/22/26", "note": "$1,186,400 needed over next 2 weeks. C. Liu (Bascom) to Derek and team. (6/23)", "done": true}, {"tag": "tp", "tl": "Admin", "title": "1640 Sepulveda — May 2026 Financials", "note": "Tiarna sent May 2026 PDF report (6/19). Review and file.", "done": true}, {"tag": "ti", "tl": "Admin", "title": "Van Allen Financial Report — Review & File", "note": "Monthly report from Tiarna. Steven (FF Capital) requested April financials 6/18.", "done": true}, {"tag": "ti", "tl": "Admin", "title": "Green Street Reports (Apr/May 2026) — Review in SharePoint", "note": "Nathan uploaded Sector Updates, Sector Insights, CPPI. (6/17)", "done": false}, {"tag": "ti", "tl": "Teams", "title": "Teams: Confirm PPM Wording", "note": "Justin asked if Claude-drafted Interim Financing section works; Derek/Fernando prefer v2. Eric go-ahead needed. (6/17)", "done": false}, {"tag": "ti", "tl": "Info", "title": "FW: ECI Strategic Market Update — Review", "note": "Justin forwarded ECI update. Review when time permits. (6/23)", "done": true}, {"tag": "tp", "tl": "Pending", "title": "CHC/CRRM Structure Adjustment to AMCs", "note": "Structure adjustment pending.", "done": false}, {"tag": "tp", "tl": "Pending", "title": "W-8BEN Renewal", "note": "Send renewal forms to all investors.", "done": false}, {"tag": "tp", "tl": "Pending", "title": "CITIC Trust Monthly Video Calls", "note": "Confirm calendar — CITIC accepted monthly video arrangement (6/10).", "done": true}, {"tag": "ti", "tl": "Manual", "title": "AUM Merge", "note": "Super long term goal.", "done": false}, {"tag": "ti", "tl": "Manual", "title": "ALO2 Shell PPM", "note": "", "done": false}, {"tag": "ti", "tl": "Manual", "title": "Companies Note", "note": "Need more clarification from FB email.", "done": false}]};
 
 function h(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function ha(s){ return (s||'').replace(/"/g,'&quot;'); }
@@ -538,6 +801,65 @@ async function runBrief(){
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
+// ── Push to GitHub via Contents API ──────────────────────────────────────────
+const _GPAT = '';
+const _GREPO = 'ericliang25/chenco-brief';
+const _GFILE = 'index.html';
+
+async function pushToGitHub() {
+  const btn = document.querySelector('button[onclick="pushToGitHub()"]');
+  const setBtn = (txt) => { if(btn) btn.textContent = txt; };
+  const fail = (msg) => { setBtn('✗ Push'); showToastLong('Push failed: ' + msg); };
+
+  if (!_GPAT) { fail('No PAT'); return; }
+  setBtn('Pushing…');
+
+  try {
+    // Get current file SHA
+    const metaRes = await fetch(`https://api.github.com/repos/${_GREPO}/contents/${_GFILE}`, {
+      headers: { 'Authorization': `token ${_GPAT}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!metaRes.ok) { fail('Auth error ' + metaRes.status); return; }
+    const meta = await metaRes.json();
+    if (!meta.sha) { fail('No SHA returned'); return; }
+
+    // Get current HTML and strip PAT before pushing (keeps token out of public repo)
+    let html = document.documentElement.outerHTML;
+    html = html.split(_GPAT).join('');
+
+    // Base64 encode (handles Unicode)
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+
+    // Push
+    const d = new Date();
+    const label = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+    const putRes = await fetch(`https://api.github.com/repos/${_GREPO}/contents/${_GFILE}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${_GPAT}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: `Brief update ${label}`, content: encoded, sha: meta.sha })
+    });
+    const res = await putRes.json();
+
+    if (res.content) {
+      setBtn('✓ Pushed');
+      showToastLong('✓ Live in ~30s — chenco-brief.pages.dev');
+      setTimeout(() => setBtn('⬆ Push'), 5000);
+    } else {
+      fail(res.message || 'unknown error');
+      setTimeout(() => setBtn('⬆ Push'), 5000);
+    }
+  } catch(e) {
+    fail(e.message);
+    setTimeout(() => setBtn('⬆ Push'), 5000);
+  }
+}
+
+function showToastLong(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 6000); }
+
 function saveHTMLFile(){
   if(!window.cowork?.callMcpTool) return;
   try {
@@ -554,5 +876,5 @@ document.addEventListener('DOMContentLoaded', () => {
   render('ongoing');
 });
 </script>
-</body>
-</html>
+
+</body></html>
