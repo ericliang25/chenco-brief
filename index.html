@@ -155,9 +155,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <span class="header-date">Wednesday, July 1, 2026</span>
   </div>
   <div style="display:flex;gap:5px;flex-shrink:0;">
-    <button class="sync-btn" onclick="syncToChat()" title="Mark done items in TASKS.md, record new tasks, and save HTML to OneDrive">Sync</button>
     <button class="sync-btn" onclick="runBrief()" title="Check email &amp; Teams for new action items">↺ Refresh</button>
-    <button class="sync-btn" onclick="pushToGitHub()" title="Push brief to chenco-brief.pages.dev">Pushing…</button>
+    <button class="sync-btn" onclick="saveAndPush()" title="Remove done items and push to chenco-brief.pages.dev">Pushing…</button>
   </div>
 </div>
 
@@ -480,7 +479,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button class="btn-del" onclick="delTask('ongoing',5)">Delete</button>
         <button class="btn-cancel" onclick="closeEdit('ongoing',5)">Cancel</button>
         <button class="btn-save" onclick="saveEdit('ongoing',5)">Save</button>
-      </div></div><div class="view-more"><button class="view-more-btn" onclick="toggleExpand('ongoing')">Show 18 more ▼</button></div></div>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',6)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag ti">Manual</span>Companies Note</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Need more clarification from FB email.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="Companies Note" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',6)">✎</button></div><div class="edit-form" id="ef-ongoing-6">
+      <input class="ei" id="et-ongoing-6" value="Companies Note" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-6" rows="2">Need more clarification from FB email.</textarea>
+      <select class="ei-select" id="ep-ongoing-6">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',6)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',6)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',6)">Save</button>
+      </div></div><div class="view-more"><button class="view-more-btn" onclick="toggleExpand('ongoing')">Show less ▲</button></div></div>
     <div class="add-row">
       <button class="add-btn" onclick="showAdd('ongoing')">＋ Add item</button>
       <div class="add-form" id="ongoing-add">
@@ -556,6 +577,7 @@ const MAX_VISIBLE = 6;
 const expandState = {};
 const noteExpanded = {};
 let dirty = false;
+let completed = [];
 
 window.addEventListener('beforeunload', e => {
   if(dirty){ e.preventDefault(); e.returnValue = ''; }
@@ -591,7 +613,6 @@ function renderNote(note, id, title) {
 function toggleNote(el){ const k=el.dataset.nid+'::'+el.dataset.ntl; noteExpanded[k]=!noteExpanded[k]; render(el.dataset.nid); }
 
 function render(id) {
-  // Auto-sort: P1 first within undone, done items sink to bottom
   data[id].sort((a,b) => {
     if(a.done !== b.done) return a.done ? 1 : -1;
     return (a.prio||2) - (b.prio||2);
@@ -709,86 +730,6 @@ async function saveHTMLFile() {
   } catch(e) { return false; }
 }
 
-// ── Sync: Path 1 bash → Path 2 sendPrompt → Path 3 copy message ──────────────
-async function syncToChat(){
-  const done=[...data.today,...data.ongoing].filter(t=>t.done).map(t=>t.title);
-  const newItems=[...data.today,...data.ongoing].filter(t=>t.isNew&&!t.done);
-  if(!done.length && !newItems.length){ showToast('Nothing to sync.'); return; }
-
-  // Path 1: sendPrompt — primary path, always use when available
-  if(typeof sendPrompt === 'function'){
-    let msg = 'Please sync my brief.';
-    if(done.length) msg += '\n\nCompleted:\n' + done.map(t=>'- '+t).join('\n');
-    if(newItems.length) msg += '\n\nNew tasks:\n' + newItems.map(t=>'- '+t.title+(t.note?' — '+t.note:'')).join('\n');
-    data.today=data.today.filter(t=>!t.done).map(t=>({...t,isNew:false}));
-    data.ongoing=data.ongoing.filter(t=>!t.done).map(t=>({...t,isNew:false}));
-    dirty=false; render('today'); render('ongoing');
-    sendPrompt(msg);
-    showToast('✓ Sent to Claude');
-    return;
-  }
-
-  // Path 2: direct write to TASKS.md via bash (no sendPrompt available)
-  if(window.cowork?.callMcpTool){
-    showToast('⏳ Saving…');
-    const ok = await trySyncViaBash(done, newItems);
-    if(ok) return;
-  }
-
-  // Path 3: copy-to-clipboard fallback
-  let copyMsg = 'Please sync my brief:';
-  if(done.length) copyMsg += '\n\nCompleted:\n' + done.map(t=>'- '+t).join('\n');
-  if(newItems.length) copyMsg += '\n\nNew tasks:\n' + newItems.map(t=>'- '+t.title+(t.note?' — '+t.note:'')).join('\n');
-  showCopy(copyMsg);
-}
-
-async function trySyncViaBash(done, newItems){
-  try{
-    const r1=await window.cowork.callMcpTool('mcp__workspace__bash',{command:
-      `python3 -c "import os,json; sl=os.listdir('/sessions'); m=next(('/sessions/'+s+'/mnt/Claude' for s in sl if os.path.exists('/sessions/'+s+'/mnt/Claude')),None); t=open(m+'/Claude OS/TASKS.md').read() if m else ''; print(json.dumps({'m':m or '','t':t}))"`
-    });
-    const txt=(r1.content?.[0]?.text||'').trim();
-    const jm=txt.match(/\{[\s\S]*\}/);
-    if(!jm) return false;
-    let {m:mount,t:tasks}=JSON.parse(jm[0]);
-    if(!mount) return false;
-
-    const today=new Date().toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'});
-    done.forEach(title=>{
-      const esc=title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      tasks=tasks.replace(new RegExp('^- \\[[ ]\\] \\*\\*'+esc+'\\*\\*.*\\n?','im'),'');
-    });
-    if(done.length) tasks=tasks.replace(/^(## Done)$/m,'$1\n'+done.map(t=>`- [x] **${t}** — Completed ${today}`).join('\n'));
-    if(newItems.length) tasks=tasks.replace(/^(## To Do)$/m,'$1\n'+newItems.map(t=>`- [ ] **${t.title}**${t.note?' — '+t.note:''}`).join('\n'));
-
-    const b64=btoa(unescape(encodeURIComponent(tasks)));
-    const r2=await window.cowork.callMcpTool('mcp__workspace__bash',{command:
-      `python3 -c "import base64; open('${mount}/Claude OS/TASKS.md','w').write(base64.b64decode('${b64}').decode('utf-8'))" && echo ok`
-    });
-    if(!(r2.content?.[0]?.text||'').includes('ok')) return false;
-
-    data.today=data.today.filter(t=>!t.done).map(t=>({...t,isNew:false}));
-    data.ongoing=data.ongoing.filter(t=>!t.done).map(t=>({...t,isNew:false}));
-    dirty=false; render('today'); render('ongoing');
-    saveHTMLFile(); // best-effort
-    showToast('✓ TASKS.md saved!');
-    return true;
-  }catch(e){ return false; }
-}
-
-function showCopy(msg){
-  const ex=document.getElementById('cfb'); if(ex) ex.remove();
-  const b=document.createElement('div'); b.id='cfb';
-  b.style.cssText='position:fixed;bottom:20px;right:20px;background:#0f172a;color:#f1f5f9;padding:14px 16px;border-radius:8px;max-width:380px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:100;font-size:12px;';
-  b.innerHTML=`<div style="font-weight:600;margin-bottom:6px;">Open Cowork and paste this to Claude:</div>
-    <textarea style="width:100%;background:#1e293b;color:#e2e8f0;border:none;border-radius:4px;padding:8px;font-size:11px;resize:none;font-family:inherit;" rows="6">${msg}</textarea>
-    <div style="display:flex;justify-content:flex-end;margin-top:8px;gap:8px;">
-      <button onclick="document.getElementById('cfb').remove()" style="font-size:11px;background:none;color:#94a3b8;border:1px solid #334155;padding:4px 10px;border-radius:4px;cursor:pointer;">Close</button>
-      <button onclick="(function(){var t=document.querySelector('#cfb textarea');t.select();document.execCommand('copy');})()" style="font-size:11px;background:#3b82f6;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-weight:600;">Copy</button>
-    </div>`;
-  document.body.appendChild(b);
-}
-
 // ── Refresh: trigger scheduled task ───────────────────────────────────────────
 async function runBrief(){
   if(!window.cowork?.runScheduledTask){showToast('Open this brief inside Cowork to use Refresh.');return;}
@@ -801,21 +742,33 @@ async function runBrief(){
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
-// ── Push to GitHub via Contents API ──────────────────────────────────────────
+// ── Save & Push: sync completions to Claude + push to GitHub ─────────────────
 const _GPAT = '';
 const _GREPO = 'ericliang25/chenco-brief';
 const _GFILE = 'index.html';
 
-async function pushToGitHub() {
-  const btn = document.querySelector('button[onclick="pushToGitHub()"]');
+async function saveAndPush() {
+  const btn = document.querySelector('[onclick="saveAndPush()"]');
   const setBtn = (txt) => { if(btn) btn.textContent = txt; };
-  const fail = (msg) => { setBtn('✗ Push'); showToastLong('Push failed: ' + msg); };
+  const fail = (msg) => { setBtn('✗ Failed'); showToastLong('Push failed: ' + msg); setTimeout(() => setBtn('⬆ Save & Push'), 5000); };
+
+  // Collect done items, remove from lists, notify Claude if in Cowork
+  const doneToday = data.today.filter(t => t.done).map(t => t.title);
+  const doneOngoing = data.ongoing.filter(t => t.done).map(t => t.title);
+  const allDone = [...doneToday, ...doneOngoing];
+  if (allDone.length) {
+    data.today = data.today.filter(t => !t.done);
+    data.ongoing = data.ongoing.filter(t => !t.done);
+    render('today'); render('ongoing');
+    if (typeof sendPrompt === 'function') {
+      sendPrompt('Please mark these as done in TASKS.md:\n' + allDone.map(t => '- ' + t).join('\n'));
+    }
+  }
 
   if (!_GPAT) { fail('No PAT'); return; }
   setBtn('Pushing…');
 
   try {
-    // Get current file SHA
     const metaRes = await fetch(`https://api.github.com/repos/${_GREPO}/contents/${_GFILE}`, {
       headers: { 'Authorization': `token ${_GPAT}`, 'Accept': 'application/vnd.github.v3+json' }
     });
@@ -823,23 +776,15 @@ async function pushToGitHub() {
     const meta = await metaRes.json();
     if (!meta.sha) { fail('No SHA returned'); return; }
 
-    // Get current HTML and strip PAT before pushing (keeps token out of public repo)
-    let html = document.documentElement.outerHTML;
-    html = html.split(_GPAT).join('');
+    let h = document.documentElement.outerHTML;
+    h = h.split(_GPAT).join('');
+    const encoded = btoa(unescape(encodeURIComponent(h)));
 
-    // Base64 encode (handles Unicode)
-    const encoded = btoa(unescape(encodeURIComponent(html)));
-
-    // Push
     const d = new Date();
     const label = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
     const putRes = await fetch(`https://api.github.com/repos/${_GREPO}/contents/${_GFILE}`, {
       method: 'PUT',
-      headers: {
-        'Authorization': `token ${_GPAT}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Authorization': `token ${_GPAT}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: `Brief update ${label}`, content: encoded, sha: meta.sha })
     });
     const res = await putRes.json();
@@ -847,15 +792,11 @@ async function pushToGitHub() {
     if (res.content) {
       setBtn('✓ Pushed');
       showToastLong('✓ Live in ~30s — chenco-brief.pages.dev');
-      setTimeout(() => setBtn('⬆ Push'), 5000);
+      setTimeout(() => setBtn('⬆ Save & Push'), 5000);
     } else {
       fail(res.message || 'unknown error');
-      setTimeout(() => setBtn('⬆ Push'), 5000);
     }
-  } catch(e) {
-    fail(e.message);
-    setTimeout(() => setBtn('⬆ Push'), 5000);
-  }
+  } catch(e) { fail(e.message); }
 }
 
 function showToastLong(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 6000); }
