@@ -431,10 +431,10 @@ async function runBrief(){
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
-// ── Save & Push: sync completions to Claude + push to GitHub ─────────────────
-const _GPAT = '[REDACTED]';
-const _GREPO = 'ericliang25/chenco-brief';
-const _GFILE = 'index.html';
+// ── Save & Push: sync completions to Claude + push via secure server-side proxy ──
+// No GitHub token lives in this page. The button POSTs the current HTML to
+// /api/push, a Cloudflare Pages Function that holds the token server-side
+// (env var) and does the actual GitHub commit. See cloudflare-functions/push.js.
 
 async function saveAndPush() {
   const btn = document.querySelector('[onclick="saveAndPush()"]');
@@ -454,49 +454,36 @@ async function saveAndPush() {
     }
   }
 
-  if (!_GPAT) { fail('No PAT'); return; }
   setBtn('Pushing…');
 
-  // Hard timeout so the button can never hang forever — if GitHub is unreachable
-  // (network/firewall stall), this guarantees a clear failure within 20s instead
+  // Hard timeout so the button can never hang forever — if the function or
+  // GitHub is unreachable, this guarantees a clear failure within 25s instead
   // of showing "Pushing…" indefinitely.
-  const fetchWithTimeout = (url, opts, ms = 20000) => {
+  const fetchWithTimeout = (url, opts, ms = 25000) => {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), ms);
     return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(t));
   };
 
   try {
-    const metaRes = await fetchWithTimeout(`https://api.github.com/repos/${_GREPO}/contents/${_GFILE}`, {
-      headers: { 'Authorization': `token ${_GPAT}`, 'Accept': 'application/vnd.github.v3+json' }
+    const html = document.documentElement.outerHTML;
+    const res = await fetchWithTimeout('/api/push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html })
     });
-    if (!metaRes.ok) { fail('Auth error ' + metaRes.status); return; }
-    const meta = await metaRes.json();
-    if (!meta.sha) { fail('No SHA returned'); return; }
+    const result = await res.json().catch(() => ({}));
 
-    let h = document.documentElement.outerHTML;
-    h = h.split(_GPAT).join('');
-    const encoded = btoa(unescape(encodeURIComponent(h)));
-
-    const d = new Date();
-    const label = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-    const putRes = await fetchWithTimeout(`https://api.github.com/repos/${_GREPO}/contents/${_GFILE}`, {
-      method: 'PUT',
-      headers: { 'Authorization': `token ${_GPAT}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: `Brief update ${label}`, content: encoded, sha: meta.sha })
-    });
-    const res = await putRes.json();
-
-    if (res.content) {
+    if (res.ok && result.ok) {
       setBtn('✓ Pushed');
       showToastLong('✓ Live in ~30s — chenco-brief.pages.dev');
       setTimeout(() => setBtn('⬆ Save & Push'), 5000);
     } else {
-      fail(res.message || 'unknown error');
+      fail(result.error || ('HTTP ' + res.status));
     }
   } catch(e) {
     if (e.name === 'AbortError') {
-      fail('Timed out after 20s — network may be blocking GitHub. Ask Claude in chat to push instead.');
+      fail('Timed out after 25s — /api/push may be unreachable (has the Pages Function been deployed?).');
     } else {
       fail(e.message);
     }
