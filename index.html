@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chenco Daily Brief</title>
@@ -149,7 +147,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .footer { text-align: center; padding: 10px 20px 18px; font-size: 10px; color: #94a3b8; }
 </style>
 </head>
-<body>
+<body data-new-gr-c-s-check-loaded="14.1309.0" data-gr-ext-installed="">
 
 <div class="header">
   <div class="header-left">
@@ -158,7 +156,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
   <div style="display:flex;gap:5px;flex-shrink:0;">
     <button class="sync-btn" onclick="runBrief()" title="Check email &amp; Teams for new action items">↺ Refresh</button>
-    <button class="sync-btn" onclick="saveAndPush()" title="Remove done items and push to chenco-brief.pages.dev">⬆ Save &amp; Push</button>
+    <button class="sync-btn" onclick="saveAndPush()" title="Remove done items and push to chenco-brief.pages.dev">Pushing…</button>
   </div>
 </div>
 
@@ -192,15 +190,59 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button class="ghost-btn" onclick="uncheckAll('today')">Uncheck All</button>
       </div>
     </div>
-    <div class="task-list" id="today-list"></div>
+    <div class="task-list" id="today-list"><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',0)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tu">Urgent</span>Castlewood Park — Escrow Form Needs Derek's Signature (due 7/9 AM)</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Joe Ferguson (Bascom, 7/8) needs Derek's signature on an escrow form to close Castlewood Park Apartments on 7/13. Execute and scan back by tomorrow morning.</div>
+    <button class="note-more" data-nid="today" data-ntl="Castlewood Park — Escrow Form Needs Derek's Signature (due 7/9 AM)" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVYMATXAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('today',0)">✎</button></div><div class="edit-form" id="ef-today-0">
+      <input class="ei" id="et-today-0" value="Castlewood Park — Escrow Form Needs Derek's Signature (due 7/9 AM)" placeholder="Title">
+      <textarea class="ei" id="en-today-0" rows="2">Joe Ferguson (Bascom, 7/8) needs Derek's signature on an escrow form to close Castlewood Park Apartments on 7/13. Execute and scan back by tomorrow morning.</textarea>
+      <select class="ei-select" id="ep-today-0">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',0)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',0)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',0)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('today',1)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Admin</span>690 190th Street Property LLC — June 2026 Financial Reports</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Samira Taghavi (Birtcher Anderson Davis, 7/7) sent the June 2026 financial report package. Review and file.</div>
+    <button class="note-more" data-nid="today" data-ntl="690 190th Street Property LLC — June 2026 Financial Reports" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVYMATVAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('today',1)">✎</button></div><div class="edit-form" id="ef-today-1">
+      <input class="ei" id="et-today-1" value="690 190th Street Property LLC — June 2026 Financial Reports" placeholder="Title">
+      <textarea class="ei" id="en-today-1" rows="2">Samira Taghavi (Birtcher Anderson Davis, 7/7) sent the June 2026 financial report package. Review and file.</textarea>
+      <select class="ei-select" id="ep-today-1">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('today',1)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('today',1)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('today',1)">Save</button>
+      </div></div></div>
     <div class="add-row">
       <button class="add-btn" onclick="showAdd('today')">＋ Add item</button>
       <div class="add-form" id="today-add">
-        <input class="ei" id="today-add-t" placeholder="Title…" />
+        <input class="ei" id="today-add-t" placeholder="Title…">
         <textarea class="ei" id="today-add-n" rows="2" placeholder="Notes (optional)…"></textarea>
         <select class="ei-select" id="today-add-p">
           <option value="1">P1 — Urgent</option>
-          <option value="2" selected>P2 — Normal</option>
+          <option value="2" selected="">P2 — Normal</option>
           <option value="3">P3 — Low</option>
         </select>
         <div class="btn-row">
@@ -220,15 +262,147 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button class="ghost-btn" onclick="uncheckAll('ongoing')">Uncheck All</button>
       </div>
     </div>
-    <div class="task-list" id="ongoing-list"></div>
+    <div class="task-list" id="ongoing-list"><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',0)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Funding</span>Bascom Funding Request — Week of 7/6/26 ($525K)</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">C. Liu (Bascom) to Derek, cc Eric (7/6, 6:34pm PT): $525,000 in deposits needed over the next two weeks. Call before initiating any wire. Supersedes the 6/29 request.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="Bascom Funding Request — Week of 7/6/26 ($525K)" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVWzjoeAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('ongoing',0)">✎</button></div><div class="edit-form" id="ef-ongoing-0">
+      <input class="ei" id="et-ongoing-0" value="Bascom Funding Request — Week of 7/6/26 ($525K)" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-0" rows="2">C. Liu (Bascom) to Derek, cc Eric (7/6, 6:34pm PT): $525,000 in deposits needed over the next two weeks. Call before initiating any wire. Supersedes the 6/29 request.</textarea>
+      <select class="ei-select" id="ep-ongoing-0">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',0)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',0)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',0)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',1)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Investor</span>PRP 20 LLC 2024 K-1 — Respond to Anthony Peng on Timing</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Anthony Peng (investor, 7/6) followed up again asking for a projection on when the 2024 K-1 for PRP 20 LLC will be received. Needs a response.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="PRP 20 LLC 2024 K-1 — Respond to Anthony Peng on Timing" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVWzjobAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('ongoing',1)">✎</button></div><div class="edit-form" id="ef-ongoing-1">
+      <input class="ei" id="et-ongoing-1" value="PRP 20 LLC 2024 K-1 — Respond to Anthony Peng on Timing" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-1" rows="2">Anthony Peng (investor, 7/6) followed up again asking for a projection on when the 2024 K-1 for PRP 20 LLC will be received. Needs a response.</textarea>
+      <select class="ei-select" id="ep-ongoing-1">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',1)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',1)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',1)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',2)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Deal</span>McKinley Homes — Rovena Hillcrest Multifamily Opportunity (Review Intro)</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Kevin Zuo, Director of Investment at McKinley Homes, introduced a multifamily acquisition opportunity (Rovena Hillcrest) via email 7/6. Review and respond if of interest.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="McKinley Homes — Rovena Hillcrest Multifamily Opportunity (Review Intro)" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVWzjoRAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('ongoing',2)">✎</button></div><div class="edit-form" id="ef-ongoing-2">
+      <input class="ei" id="et-ongoing-2" value="McKinley Homes — Rovena Hillcrest Multifamily Opportunity (Review Intro)" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-2" rows="2">Kevin Zuo, Director of Investment at McKinley Homes, introduced a multifamily acquisition opportunity (Rovena Hillcrest) via email 7/6. Review and respond if of interest.</textarea>
+      <select class="ei-select" id="ep-ongoing-2">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',2)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',2)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',2)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',3)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">IT</span>MS Entra — Decide on Conditional Access MFA Recommendation</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Microsoft flagged a new recommendation to convert Chenco from per-user MFA to Conditional Access MFA (auto-blocks on impossible-travel / anomalous-location logins). Nathan and Alen (IT) are discussing scope — needs your sign-off to proceed.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="MS Entra — Decide on Conditional Access MFA Recommendation" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      
+      <button class="edit-btn" onclick="openEdit('ongoing',3)">✎</button></div><div class="edit-form" id="ef-ongoing-3">
+      <input class="ei" id="et-ongoing-3" value="MS Entra — Decide on Conditional Access MFA Recommendation" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-3" rows="2">Microsoft flagged a new recommendation to convert Chenco from per-user MFA to Conditional Access MFA (auto-blocks on impossible-travel / anomalous-location logins). Nathan and Alen (IT) are discussing scope — needs your sign-off to proceed.</textarea>
+      <select class="ei-select" id="ep-ongoing-3">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',3)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',3)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',3)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',4)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Execute</span>4130 Cahuenga — Execute &amp;amp; Overnight Signature Packets</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">Justin approved both the Lender Signature Packet and the Closing Signature Packet to proceed (7/2, 2:09pm PT). Yoka to execute and overnight both to the lender/closing agent.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="4130 Cahuenga — Execute &amp; Overnight Signature Packets" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVTdPisAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('ongoing',4)">✎</button></div><div class="edit-form" id="ef-ongoing-4">
+      <input class="ei" id="et-ongoing-4" value="4130 Cahuenga — Execute &amp; Overnight Signature Packets" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-4" rows="2">Justin approved both the Lender Signature Packet and the Closing Signature Packet to proceed (7/2, 2:09pm PT). Yoka to execute and overnight both to the lender/closing agent.</textarea>
+      <select class="ei-select" id="ep-ongoing-4">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',4)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',4)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',4)">Save</button>
+      </div></div><div class="task-item">
+      <div class="task-cb" onclick="toggleDone('ongoing',5)"></div>
+      <div class="task-body">
+        <div class="task-title"><span class="tag tp">Review</span>Highridge (HIRI) June 2026 Finals — Full Packet Due 7/15</div>
+        <div class="note-wrap">
+    <div class="task-note note-clamp">AMC (April Raehl) sent the Highridge initial packet (7/2). Full financial packet to follow by 7/15/26 — review initial figures now and calendar the full-packet review.</div>
+    <button class="note-more" data-nid="ongoing" data-ntl="Highridge (HIRI) June 2026 Finals — Full Packet Due 7/15" onclick="toggleNote(this)">… more</button>
+  </div>
+      </div>
+      <a href="https://outlook.office365.com/owa/?ItemID=AAMkADY0NDdmNjA2LTRmMzEtNGFmZi1hNzE3LWUzYWFlNDg5YTg3NABGAAAAAACHrgOdFs1%2FSoyZy4qM8aIWBwBUGpIQYHKESJvTqZ0fK1WgAAAAAAEMAABUGpIQYHKESJvTqZ0fK1WgAAVTdPiqAAA%3D&amp;exvsurl=1&amp;viewmodel=ReadMessageItem" target="_blank" class="src-link" title="Open source">↗</a>
+      <button class="edit-btn" onclick="openEdit('ongoing',5)">✎</button></div><div class="edit-form" id="ef-ongoing-5">
+      <input class="ei" id="et-ongoing-5" value="Highridge (HIRI) June 2026 Finals — Full Packet Due 7/15" placeholder="Title">
+      <textarea class="ei" id="en-ongoing-5" rows="2">AMC (April Raehl) sent the Highridge initial packet (7/2). Full financial packet to follow by 7/15/26 — review initial figures now and calendar the full-packet review.</textarea>
+      <select class="ei-select" id="ep-ongoing-5">
+        <option value="1">P1 — Urgent</option>
+        <option value="2" selected="">P2 — Normal</option>
+        <option value="3">P3 — Low</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-del" onclick="delTask('ongoing',5)">Delete</button>
+        <button class="btn-cancel" onclick="closeEdit('ongoing',5)">Cancel</button>
+        <button class="btn-save" onclick="saveEdit('ongoing',5)">Save</button>
+      </div></div><div class="view-more"><button class="view-more-btn" onclick="toggleExpand('ongoing')">Show 22 more ▼</button></div></div>
     <div class="add-row">
       <button class="add-btn" onclick="showAdd('ongoing')">＋ Add item</button>
       <div class="add-form" id="ongoing-add">
-        <input class="ei" id="ongoing-add-t" placeholder="Title…" />
+        <input class="ei" id="ongoing-add-t" placeholder="Title…">
         <textarea class="ei" id="ongoing-add-n" rows="2" placeholder="Notes (optional)…"></textarea>
         <select class="ei-select" id="ongoing-add-p">
           <option value="1">P1 — Urgent</option>
-          <option value="2" selected>P2 — Normal</option>
+          <option value="2" selected="">P2 — Normal</option>
           <option value="3">P3 — Low</option>
         </select>
         <div class="btn-row">
@@ -284,7 +458,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     </div>
   </div>
 
-</div>
+
 
 <div class="footer">Sources: sofrrate.com · Federal Reserve H.15 · tradingeconomics.com · CNBC · Yahoo Finance · CRE Daily · GlobeSt · Realcomm · Outlook &amp; Teams (Chenco) — Brief auto-generated Jul 8, 2026</div>
 <div class="toast" id="toast"></div>
@@ -497,5 +671,6 @@ document.addEventListener('DOMContentLoaded', () => {
   render('ongoing');
 });
 </script>
-</body>
-</html>
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"></grammarly-desktop-integration></html>
